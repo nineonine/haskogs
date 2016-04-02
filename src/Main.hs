@@ -64,6 +64,8 @@ testProgram = do
     liftIO $ print $ Discogs.Types.Artist.name ar
     l <- label 1
     liftIO $ print $ Discogs.Types.Label.name l
+    sr <- search [("name", "ben sims")]
+    liftIO $ print sr
     return ()
 
 main :: IO ()

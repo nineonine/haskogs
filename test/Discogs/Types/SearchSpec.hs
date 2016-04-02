@@ -16,13 +16,13 @@ main :: IO ()
 main = hspec spec
 
 spec :: Spec
-spec = describe "Discogs.Types.Search" $ do
-    describe "Search" $ do
+spec = describe "Discogs.Types.SearchResult" $ do
+    describe "SearchResult" $ do
         example <- runIO $ LBS.readFile "test/data/search_example.json"
 
-        it "can read release example json file" $
+        it "can read search results example json file" $
             example `shouldSatisfy` not . LBS.null
 
-        it "can parse release from json" $ do
-            let decoded = eitherDecode example :: Either String Search
+        it "can parse search results from json" $ do
+            let decoded = eitherDecode example :: Either String SearchResult
             decoded `shouldSatisfy` isRight

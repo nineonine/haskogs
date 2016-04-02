@@ -6,6 +6,7 @@ import Discogs.Types.Release.Master
 import Discogs.Types.Release.Versions
 import Discogs.Types.Artist
 import Discogs.Types.Label
+import Discogs.Types.Search
 import qualified Discogs.Types.Artist.Release as AR
 import qualified Discogs.Types.Label.Release as LR
 import qualified Discogs.Request.Database as Req
@@ -30,3 +31,6 @@ artistReleases n = runRequest $ Req.getArtistReleases n
 
 labelReleases :: Monad m => Int -> DiscogsT m LR.LabelReleases
 labelReleases n = runRequest $ Req.getLabelReleases n
+
+search :: Monad m => SearchQuery -> DiscogsT m SearchResult
+search q = runRequest $ Req.search q

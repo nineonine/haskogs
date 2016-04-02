@@ -2,6 +2,8 @@
 
 module Discogs.Request.Database where
 
+import Discogs.Types.Search
+
 import Prelude hiding (concat)
 import Data.Text hiding (concat, pack, append)
 import Network.HTTP.Client
@@ -10,7 +12,7 @@ import Network.HTTP.Types
 import Data.ByteString hiding (pack)
 import Data.ByteString.Char8 (pack)
 
-toBS :: Int -> ByteString
+toBS :: Show a => a -> ByteString
 toBS = pack . show
 
 getRelease :: Int -> Request
@@ -33,3 +35,6 @@ getArtistReleases n = def { path = concat ["/artists/", toBS n, "/releases"] }
 
 getLabelReleases :: Int -> Request
 getLabelReleases n = def { path = concat ["/labels/", toBS n, "/releases"] }
+
+search :: SearchQuery -> Request
+search query = def { path = concat ["/database/search?", toBS $ prepareQuery query ] }
