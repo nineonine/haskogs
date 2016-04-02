@@ -26,3 +26,13 @@ spec = describe "Discogs.Types.Label.Release" $ do
         it "can parse label release from json" $ do
             let decoded = eitherDecode labelExample :: Either String Release
             decoded `shouldSatisfy` isRight
+
+    describe "LabelReleases" $ do
+        lrsExample <- runIO $ LBS.readFile "test/data/label/label_releases_example.json"
+
+        it "can read label releases example json file" $
+            lrsExample `shouldSatisfy` not . LBS.null
+
+        it "can parse label releases from json" $ do
+            let decoded = eitherDecode lrsExample :: Either String LabelReleases
+            decoded `shouldSatisfy` isRight
