@@ -52,3 +52,26 @@ test-suite test
     text,
     time
   ghc-options: -Wall
+
+test-suite test-io
+  hs-source-dirs: src, test-io
+  main-is: Spec.hs
+  default-extensions: OverloadedStrings
+  default-language: Haskell2010
+  type: exitcode-stdio-1.0
+  build-depends:
+    base,
+    Cabal,
+    aeson,
+    bytestring,
+    haskogs,
+    hspec,
+    text,
+    time,
+    http-client,
+    http-client-tls,
+    transformers,
+    free,
+    http-types,
+    data-default-class
+  ghc-options: -Wall
