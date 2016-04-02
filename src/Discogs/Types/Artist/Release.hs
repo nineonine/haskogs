@@ -2,6 +2,8 @@
 
 module Discogs.Types.Artist.Release where
 
+import Discogs.Types.Pagination
+
 import Data.Text
 import Data.Aeson
 import GHC.Generics
@@ -9,11 +11,16 @@ import GHC.Generics
 data Release = Release
     { thumb        :: Text
     , artist       :: Text
-    , main_release :: Maybe Text
+    , main_release :: Maybe Int
     , title        :: Text
     , role         :: Text
-    , year         :: Int
+    , year         :: Maybe Int
     , resource_url :: Text
     , release_type :: Maybe Text
     , id           :: Int
+    } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+
+data ArtistReleases = ArtistReleases
+    { pagination :: Maybe Pagination
+    , releases   :: [Release]
     } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)

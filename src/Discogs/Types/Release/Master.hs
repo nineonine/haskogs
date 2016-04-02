@@ -17,7 +17,7 @@ data Master = Master
       , main_release_url   :: Text
       , resource_url       :: Text
       , versions_url       :: Text
-      , videos             :: [Video]
+      , videos             :: Maybe [Video]
       , year               :: Int
       , images             :: [Image]
       , id                 :: Int

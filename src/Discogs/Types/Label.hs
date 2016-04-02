@@ -17,8 +17,8 @@ data Label = Label
     , uri          :: Text
     , parent_label :: Maybe A.Alias
     , sublabels    :: Maybe [A.Alias]
-    , urls         :: [Text]
-    , images       :: [I.Image]
+    , urls         :: Maybe [Text]
+    , images       :: Maybe [I.Image]
     , resource_url :: Text
     , _id           :: Int
     , data_quality :: Text
@@ -33,8 +33,8 @@ instance FromJSON Label where
         uri          <- o .: "uri"
         parent_label <- o .:? "parent_label"
         sublabels    <- optional (o .: "sublabels")
-        urls         <- o .: "urls"
-        images       <- o .: "images"
+        urls         <- o .:? "urls"
+        images       <- o .:? "images"
         resource_url <- o .: "resource_url"
         _id          <- o .: "id"
         data_quality <- o .: "data_quality"
