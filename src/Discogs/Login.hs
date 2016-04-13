@@ -1,6 +1,5 @@
 module Discogs.Login where
 
-import Data.Text hiding (pack)
 import Data.Default.Class
 import Data.ByteString.Lazy (ByteString)
 import Data.ByteString.Lazy.Char8 (pack)

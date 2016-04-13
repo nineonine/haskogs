@@ -20,7 +20,7 @@ data Inventory = Inventory
 data Listing = Listing
     { weight           :: Maybe Int
     , format_quantity  :: Maybe Int
-    , external_id      :: Maybe Int
+    , external_id      :: Maybe Text
     , location         :: Maybe Text
     , status           :: Text
     , price            :: Price

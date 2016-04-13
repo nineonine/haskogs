@@ -1,12 +1,14 @@
-{-# LANGUAGE OverloadedStrings, GADTs, GeneralizedNewtypeDeriving, KindSignatures, LambdaCase#-}
+{-# LANGUAGE OverloadedStrings, GADTs, GeneralizedNewtypeDeriving, KindSignatures, LambdaCase #-}
 
 module Discogs.Types.Discogs where
 
+import Discogs.Tools
 import Discogs.Login
 import Discogs.Types.Error
 
 import Data.Maybe
 import Data.Aeson
+import Control.Exception
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Free
 import Control.Monad.Trans.Class
@@ -16,13 +18,11 @@ import Network.HTTP.Types
 import Data.ByteString.Lazy (ByteString, append, toStrict)
 import Data.Default.Class
 
-data DiscogsF (m :: * -> *) (a :: *) where
-    RunRequest :: FromJSON b => Request -> (b -> a) -> DiscogsF m a
-    -- ProcessResponse :: FromJSON b => Request -> (b -> a) -> DiscogsF m a
+data DiscogsF (m :: * -> *) next where
+    RunRequest :: (FromJSON a) => Request -> (a -> next) -> DiscogsF m next
 
 instance Functor (DiscogsF m) where
-    fmap f (RunRequest r x) = RunRequest r (f . x)
-    -- fmap f (ProcessResponse r x) = ProcessResponse r (f . x)
+    fmap f (RunRequest r g) = RunRequest r (f . g)
 
 newtype DiscogsT m a = DiscogsT (FreeT (DiscogsF m) m a)
     deriving (Functor, Applicative, Monad)
@@ -36,8 +36,53 @@ instance (MonadIO m) => MonadIO (DiscogsT m) where
 runRequest :: (FromJSON a, Monad m) => Request -> DiscogsT m a
 runRequest r = DiscogsT $ liftF $ RunRequest r id
 
--- processResponse :: (FromJSON a, Monad m) => Request -> DiscogsT m a
--- processResponse r = DiscogsT $ liftF $ ProcessResponse r id
+runDiscogs :: (MonadIO m, FromJSON a) => ByteString -> DiscogsT m a -> m (Either DiscogsError a)
+runDiscogs token = runDiscogsWith def { loginMethod = Token token }
+
+runDiscogsAnon :: (MonadIO m, FromJSON a) => DiscogsT m a -> m (Either DiscogsError a)
+runDiscogsAnon  = runDiscogsWith def
+
+runDiscogsWith  :: (MonadIO m, FromJSON a) => DiscogsOptions -> DiscogsT m a -> m (Either DiscogsError a)
+runDiscogsWith (DiscogsOptions _ man lm ua) discogs = do
+    manager <- case man of
+        Just m -> return m
+        Nothing -> liftIO $ newManager tlsManagerSettings
+    userAgent <- case ua of
+        Just s -> return s
+        Nothing -> return "haskogs 0.1.0.0 by nineonine"
+    let headers = [("User-Agent", toStrict userAgent)]
+    headers' <- if  lm /= Anonymous
+                    then return $ ("Authorization", toStrict $ append "Discogs token=" (getToken lm)) : headers
+                    else return headers
+    interpretIO (def { connMgr = Just manager , usrAgent = userAgent , extraHeaders = headers'}) discogs
+
+interpretIO :: (MonadIO m) => DiscogsState -> DiscogsT m a -> m (Either DiscogsError a)
+interpretIO state@(DiscogsState url _ mgr headers _ _ ) (DiscogsT r) = runFreeT r >>= \case
+    Pure x -> return $ Right x
+    Free (RunRequest req next) -> do
+        -- case method req of
+        let r' = req { requestHeaders = requestHeaders req ++ headers
+                     , host = toStrict url
+                     }
+        liftIO $ print $ r'
+        -- liftIO $ print $ requestBody r'
+        result <- liftIO $ try $ httpLbs r' (fromJust mgr)
+        case result of
+            Left e -> return $ Left $ Some e
+            Right response -> do
+                liftIO $ print $ responseStatus response
+                let (Just respObject) = (decode . responseBody) response
+                interpretIO state $ DiscogsT $ next respObject
+
+
+
+-- interpretIO state $ DiscogsT $ next
+
+withParams :: (MonadIO m) => DiscogsT m a -> Params -> DiscogsT m a
+withParams (DiscogsT r) params = DiscogsT $ transFreeT ( `withParams'` params) r
+
+withParams' :: DiscogsF m a -> Params ->  DiscogsF m a
+withParams' (RunRequest r next) params = flip RunRequest next $ setQueryString (mkParams params) r
 
 data DiscogsOptions = DiscogsOptions
     { enableRateLimit   :: Bool
@@ -57,33 +102,4 @@ data DiscogsState = DiscogsState
     , usrAgent        :: ByteString }
 
 instance Default DiscogsState where
-    def = DiscogsState "api.discogs.com" True Nothing [] Anonymous "discogs-haskell 0.1.0.0 by nineonine"
-
-runDiscogs :: (MonadIO m, FromJSON a) => ByteString -> DiscogsT m a -> m (Either DiscogsError a)
-runDiscogs token = runDiscogsWith def { loginMethod = Token token }
-
-runDiscogsAnon :: (MonadIO m, FromJSON a) => DiscogsT m a -> m (Either DiscogsError a)
-runDiscogsAnon  = runDiscogsWith def
-
-runDiscogsWith  :: (MonadIO m, FromJSON a) => DiscogsOptions -> DiscogsT m a -> m (Either DiscogsError a)
-runDiscogsWith (DiscogsOptions _ man lm ua) discogs = do
-    manager <- case man of
-        Just m -> return m
-        Nothing -> liftIO $ newManager tlsManagerSettings
-    userAgent <- case ua of
-        Just s -> return s
-        Nothing -> return "discogs-haskell 0.1.0.0 by nineonine"
-    let headers = [("User-Agent", toStrict userAgent)]
-    headers' <- if  lm /= Anonymous
-                    then return $ ("Authorization", toStrict $ append "Discogs token=" (getToken lm)) : headers
-                    else return headers
-    interpretIO (def { connMgr = Just manager , usrAgent = userAgent , extraHeaders = headers'}) discogs
-
-
-interpretIO :: (MonadIO m, FromJSON a) => DiscogsState -> DiscogsT m a -> m (Either DiscogsError a)
-interpretIO state@(DiscogsState url _ mgr headers _ _ ) (DiscogsT r) = runFreeT r >>= \case
-      Pure x -> return $ Right x
-      Free (RunRequest req next) -> do
-          let r' = req { requestHeaders = headers, host = toStrict url }
-          Just respObject <- liftIO $ (decode . responseBody) <$> httpLbs r' (fromJust mgr)
-          interpretIO state $ DiscogsT $ next respObject
+    def = DiscogsState "api.discogs.com" True Nothing [] Anonymous "haskogs 0.1.0.0 by nineonine"

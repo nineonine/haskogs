@@ -6,10 +6,17 @@ module Main where
 import Discogs.Login
 import Discogs.Types.Error
 import Discogs.Types.Discogs
-import Discogs.Actions.Database
 import Discogs.Types.Release
 import Discogs.Types.Artist
 import Discogs.Types.Label
+
+import qualified Discogs.Request.Database as RDB
+import qualified Discogs.Request.MarketPlace as RMP
+
+import Discogs.Actions.Database
+import Discogs.Actions.MarketPlace
+
+import Discogs.Tools
 
 import Data.Maybe (fromJust)
 import Data.Aeson
@@ -26,18 +33,6 @@ import Control.Monad.Trans.Free
 
 tok :: ByteString
 tok = "gdnfNCVuNkjWFzhFBQkZkSOIAPHlmCDwMYnsOAsN"
-
--- testProgram :: (MonadIO m, Monad m) => DiscogsT m ()
--- testProgram = do
---     r <- release 1
---     liftIO $ print $ title r
---     ar <- artist 1
---     liftIO $ print $ Discogs.Types.Artist.name ar
---     l <- label 1
---     liftIO $ print $ Discogs.Types.Label.name l
---     sr <- search [("name", "ben sims")]
---     liftIO $ print sr
---     return ()
 
 main :: IO ()
 main = undefined
