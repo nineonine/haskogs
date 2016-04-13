@@ -14,7 +14,6 @@ import qualified Discogs.Types.Pagination as P
 
 import Discogs.Actions.Database
 import Discogs.Types.Discogs
-import qualified Data.Text as T
 
 import  qualified Data.ByteString.Lazy as LBS
 import Test.Hspec
@@ -93,4 +92,4 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right sr ->
-                (P.items $ S.pagination sr) `shouldSatisfy` (==248)
+                (P.page $ S.pagination sr) `shouldSatisfy` (==1)

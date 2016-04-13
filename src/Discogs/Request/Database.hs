@@ -2,39 +2,34 @@
 
 module Discogs.Request.Database where
 
-import Discogs.Types.Search
+import Discogs.Tools
 
 import Prelude hiding (concat)
-import Data.Text hiding (concat, pack, append)
 import Network.HTTP.Client
-import Data.Default.Class
-import Network.HTTP.Types
 import Data.ByteString hiding (pack)
-import Data.ByteString.Char8 (pack)
-
-toBS :: Show a => a -> ByteString
-toBS = pack . show
 
 getRelease :: Int -> Request
-getRelease n = def { path = append "/releases/" $ toBS n }
+getRelease n = secureReq { path = append "/releases/" $ intToBs n }
 
 getArtist :: Int -> Request
-getArtist n = def { path = append "/artists/" $ toBS n }
+getArtist n = secureReq { path = append "/artists/" $ intToBs n }
 
 getMaster :: Int -> Request
-getMaster n = def { path = append "/masters/" $ toBS n }
+getMaster n = secureReq { path = append "/masters/" $ intToBs n }
 
 getLabel :: Int -> Request
-getLabel n = def { path = append "/labels/" $ toBS n }
+getLabel n = secureReq { path = append "/labels/" $ intToBs n }
 
 getReleaseVersions :: Int -> Request
-getReleaseVersions n = def { path = concat ["/masters/", toBS n, "/versions"] }
+getReleaseVersions n = secureReq { path = concat ["/masters/", intToBs n, "/versions"] }
 
 getArtistReleases :: Int -> Request
-getArtistReleases n = def { path = concat ["/artists/", toBS n, "/releases"] }
+getArtistReleases n = secureReq { path = concat ["/artists/", intToBs n, "/releases"] }
 
 getLabelReleases :: Int -> Request
-getLabelReleases n = def { path = concat ["/labels/", toBS n, "/releases"] }
+getLabelReleases n = secureReq { path = concat ["/labels/", intToBs n, "/releases"] }
 
-search :: SearchQuery -> Request
-search query = def { path = concat ["/database/search?", toBS $ prepareQuery query ] }
+search :: Params -> Request
+search ps = setQueryString (mkParams ps) r
+            where
+            r = secureReq { path = "/database/search" }

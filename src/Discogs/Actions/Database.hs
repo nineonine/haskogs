@@ -1,5 +1,6 @@
 module Discogs.Actions.Database where
 
+import Discogs.Tools
 import Discogs.Types.Discogs
 import Discogs.Types.Release
 import Discogs.Types.Release.Master
@@ -32,5 +33,5 @@ artistReleases n = runRequest $ Req.getArtistReleases n
 labelReleases :: Monad m => Int -> DiscogsT m LR.LabelReleases
 labelReleases n = runRequest $ Req.getLabelReleases n
 
-search :: Monad m => SearchQuery -> DiscogsT m SearchResult
-search q = runRequest $ Req.search q
+search :: Monad m => Params -> DiscogsT m SearchResult
+search ps = runRequest $ Req.search ps
