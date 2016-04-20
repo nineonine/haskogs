@@ -1,4 +1,5 @@
-{-# LANGUAGE OverloadedStrings, GADTs, GeneralizedNewtypeDeriving, KindSignatures, LambdaCase #-}
+{-# LANGUAGE OverloadedStrings, GADTs, GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE KindSignatures, LambdaCase , RankNTypes #-}
 
 module Discogs.Types.Discogs where
 
@@ -20,9 +21,13 @@ import Data.Default.Class
 
 data DiscogsF (m :: * -> *) next where
     RunRequest :: (FromJSON a) => Request -> (a -> next) -> DiscogsF m next
+    HandleResponse :: (FromJSON a) => Response ByteString -> (a -> next) -> DiscogsF m next
+    FailWith :: DiscogsError -> DiscogsF m next
 
 instance Functor (DiscogsF m) where
     fmap f (RunRequest r g) = RunRequest r (f . g)
+    fmap f (HandleResponse r n) = HandleResponse r (f . n)
+    fmap _ (FailWith e) = FailWith e
 
 newtype DiscogsT m a = DiscogsT (FreeT (DiscogsF m) m a)
     deriving (Functor, Applicative, Monad)
@@ -34,15 +39,21 @@ instance (MonadIO m) => MonadIO (DiscogsT m) where
     liftIO = DiscogsT . liftIO
 
 runRequest :: (FromJSON a, Monad m) => Request -> DiscogsT m a
-runRequest r = DiscogsT $ liftF $ RunRequest r id
+runRequest r = DiscogsT . liftF $ RunRequest r id
 
-runDiscogs :: (MonadIO m, FromJSON a) => ByteString -> DiscogsT m a -> m (Either DiscogsError a)
+handleResponse :: (FromJSON a, Monad m) => Response ByteString -> DiscogsT m a
+handleResponse r = DiscogsT . liftF $ HandleResponse r id
+
+failWith  :: (Monad m) => DiscogsError -> DiscogsT m a
+failWith e = DiscogsT . liftF $ FailWith e
+
+runDiscogs :: (MonadIO m, FromJSON a) => ByteString -> DiscogsT m a -> m (Either DiscogsError (Maybe a))
 runDiscogs token = runDiscogsWith def { loginMethod = Token token }
 
-runDiscogsAnon :: (MonadIO m, FromJSON a) => DiscogsT m a -> m (Either DiscogsError a)
+runDiscogsAnon :: (MonadIO m, FromJSON a) => DiscogsT m a -> m (Either DiscogsError (Maybe a))
 runDiscogsAnon  = runDiscogsWith def
 
-runDiscogsWith  :: (MonadIO m, FromJSON a) => DiscogsOptions -> DiscogsT m a -> m (Either DiscogsError a)
+runDiscogsWith  :: (MonadIO m, FromJSON a) => DiscogsOptions -> DiscogsT m a -> m (Either DiscogsError (Maybe a))
 runDiscogsWith (DiscogsOptions _ man lm ua) discogs = do
     manager <- case man of
         Just m -> return m
@@ -56,33 +67,31 @@ runDiscogsWith (DiscogsOptions _ man lm ua) discogs = do
                     else return headers
     interpretIO (def { connMgr = Just manager , usrAgent = userAgent , extraHeaders = headers'}) discogs
 
-interpretIO :: (MonadIO m) => DiscogsState -> DiscogsT m a -> m (Either DiscogsError a)
+interpretIO :: (MonadIO m) => DiscogsState -> DiscogsT m a -> m (Either DiscogsError (Maybe a))
 interpretIO state@(DiscogsState url _ mgr headers _ _ ) (DiscogsT r) = runFreeT r >>= \case
-    Pure x -> return $ Right x
+    Pure x -> return $ Right $ Just x
+    Free (FailWith e) -> return $ Left e
     Free (RunRequest req next) -> do
-        -- case method req of
-        let r' = req { requestHeaders = requestHeaders req ++ headers
-                     , host = toStrict url
-                     }
-        liftIO $ print $ r'
-        -- liftIO $ print $ requestBody r'
-        result <- liftIO $ try $ httpLbs r' (fromJust mgr)
-        case result of
-            Left e -> return $ Left $ Some e
-            Right response -> do
-                liftIO $ print $ responseStatus response
-                let (Just respObject) = (decode . responseBody) response
-                interpretIO state $ DiscogsT $ next respObject
+        let r' = req { requestHeaders = requestHeaders req ++ headers , host = toStrict url }
+        maybeResponse <- liftIO $ try $ httpLbs r' (fromJust mgr)
+        case maybeResponse of
+            Left e -> interpretIO state . DiscogsT . wrap . FailWith $ Some e
+            Right resp -> interpretIO state . DiscogsT . wrap $ HandleResponse resp next
+    Free (HandleResponse rsp next) ->
+        case statusCode $ responseStatus rsp of
+            404 -> interpretIO state . DiscogsT . wrap . FailWith . HTTPError $ responseStatus rsp
+            204 -> return $ Right Nothing
+            _   -> case eitherDecode $ responseBody rsp of
+                       Left s -> interpretIO state . DiscogsT . wrap . FailWith $ ParseError s
+                       Right a -> interpretIO state . DiscogsT $ next a
 
-
-
--- interpretIO state $ DiscogsT $ next
 
 withParams :: (MonadIO m) => DiscogsT m a -> Params -> DiscogsT m a
 withParams (DiscogsT r) params = DiscogsT $ transFreeT ( `withParams'` params) r
 
 withParams' :: DiscogsF m a -> Params ->  DiscogsF m a
 withParams' (RunRequest r next) params = flip RunRequest next $ setQueryString (mkParams params) r
+withParams' _ _                        = FailWith $ DiscogsError BadParamsUsageError
 
 data DiscogsOptions = DiscogsOptions
     { enableRateLimit   :: Bool
