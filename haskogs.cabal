@@ -74,4 +74,4 @@ test-suite test-io
     free,
     http-types,
     data-default-class
-  ghc-options: -Wall
+  ghc-options:
