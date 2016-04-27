@@ -17,6 +17,8 @@ import Data.Default.Class
 import Data.ByteString hiding (dropWhile, map)
 import qualified Data.ByteString.Char8 as C
 
+fromRightMaybe :: Either b (Maybe a) -> a
+fromRightMaybe (Right (Just smth) ) = smth
 
 toBS :: T.Text -> ByteString
 toBS = encodeUtf8
@@ -31,10 +33,10 @@ data OptionalParams = forall a. (Show a, ToJSON a) => OP T.Text a
 toOptionalParams :: Params -> [OptionalParams]
 toOptionalParams = map toPS
                    where
-                   toPS (a, b@"True") = OP a True
-                   toPS (a, b@"False") = OP a False
+                   toPS (a, "True") = OP a True
+                   toPS (a, "False") = OP a False
                    toPS (a, b) = case double b of
-                                 Right (f, s) -> OP a f
+                                 Right (f, _) -> OP a f
                                  Left _       -> OP a b
 
 toKeyValues :: [OptionalParams] -> [Pair]
@@ -56,6 +58,5 @@ toText s = if Prelude.all isDigit (show s)
 secureReq :: Request
 secureReq = def { secure = True
                 , port = 443 }
-
 
 data APIMessage = APIMessage { message :: T.Text } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)

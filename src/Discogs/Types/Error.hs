@@ -17,4 +17,5 @@ data APIerror   = ResourceNotFound
                   | ServerError
                   | RateLimitError
                   | NotAuthorizedError
+                  | BadParamsUsageError
                   deriving (Show, Eq)
