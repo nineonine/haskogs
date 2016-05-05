@@ -59,4 +59,9 @@ secureReq :: Request
 secureReq = def { secure = True
                 , port = 443 }
 
+optParams :: Maybe Params -> [Pair]
+optParams ps = case ps of
+                Just prms -> preparePairs prms
+                _         -> []
+
 data APIMessage = APIMessage { message :: T.Text } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
