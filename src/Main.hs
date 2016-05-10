@@ -12,9 +12,11 @@ import Discogs.Types.Label
 
 import qualified Discogs.Request.Database as RDB
 import qualified Discogs.Request.MarketPlace as RMP
+import qualified Discogs.Request.User as RU
 
 import Discogs.Actions.Database
 import Discogs.Actions.MarketPlace
+import qualified Discogs.Actions.User as U
 
 import Discogs.Tools
 

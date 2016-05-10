@@ -38,18 +38,22 @@ getUserContributions usr = secureReq { path = concat [ "/users/" , toBS usr , "/
 getCollection :: Text -> Request
 getCollection usr = secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders" ] }
 
-postFolder :: Text -> Maybe Params -> Request
-postFolder usr ps = let reqBody = object $ optParams ps
-                     in secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders" ]
-                       , method = "POST"
-                       , requestHeaders = [("Content-Type", "application/json")]
-                       , requestBody = RequestBodyLBS $ encode reqBody }
+postFolder :: Text -> Text -> Request
+postFolder usr folder = let reqBody = object [ "name" .= folder ]
+                        in secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders" ]
+                         , method = "POST"
+                         , requestHeaders = [("Content-Type", "application/json")]
+                         , requestBody = RequestBodyLBS $ encode reqBody }
 
 getCollectionFolder :: Text -> Int -> Request
 getCollectionFolder usr fid = secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders/" , intToBs fid ] }
 
-renameFolder :: Text -> Int -> Request
-renameFolder usr fid = secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders/" , intToBs fid ] , method = "POST" }
+editFolder :: Text -> Int -> Maybe Params -> Request
+editFolder usr fid ps = let reqBody = object $ optParams ps
+                        in secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders/" , intToBs fid ]
+                          , method = "POST"
+                          , requestHeaders = [("Content-Type", "application/json")]
+                          , requestBody = RequestBodyLBS $ encode reqBody }
 
 deleteFolder :: Text -> Int -> Request
 deleteFolder usr fid = secureReq { path = concat [ "/users/" , toBS usr , "/collection/folders/" , intToBs fid ] , method = "DELETE" }

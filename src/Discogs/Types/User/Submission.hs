@@ -11,9 +11,9 @@ import Data.Aeson
 import GHC.Generics
 
 data Submission = Submission
-    { labels   :: [Label]
-    , releases :: [Release]
-    , artists  :: [Artist]
+    { labels   :: Maybe [Label]
+    , releases :: Maybe [Release]
+    , artists  :: Maybe [Artist]
     } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
 
 data Submissions = Submissions

@@ -15,20 +15,20 @@ data Releases  = Releases
     } deriving (Read, Show, Eq, Generic, FromJSON, ToJSON)
 
 data Release = Release
-    { instance_id       :: Int
+    { instance_id       :: Maybe Int
     , rating            :: Int
     , basic_information :: BasicInfo
-    , folder_id         :: Int
+    , folder_id         :: Maybe Int
     , date_added        :: UTCTime
     , _id               :: Int
     } deriving (Show, Read, Eq)
 
 instance FromJSON Release where
     parseJSON = withObject "release" $ \o -> do
-        instance_id       <- o .: "instance_id"
+        instance_id       <- o .:? "instance_id"
         rating            <- o .: "rating"
         basic_information <- o .: "basic_information"
-        folder_id         <- o .: "folder_id"
+        folder_id         <- o .:? "folder_id"
         date_added        <- o .: "date_added"
         _id               <- o .: "id"
         return Release{..}
