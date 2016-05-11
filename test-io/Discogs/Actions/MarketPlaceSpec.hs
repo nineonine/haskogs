@@ -123,12 +123,12 @@ spec = describe "Discogs.Actions.MarketPlace" $ do
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just o) -> (O._id o) `shouldBe` "545705-1"
 
-    it "should update order shipping by given order id and params" $ do
-        r <- runDiscogs testingToken $ updateOrder "545705-1" ( Just [("shipping", "50.0")] )
-        r `shouldSatisfy` isRight
-        case r of
-            Left _ -> expectationFailure "Request failed. Something went wrong."
-            Right (Just o) -> (P.value $ O.shipping o) `shouldBe` 50.0
+    -- it "should update order shipping by given order id and params" $ do
+    --     r <- runDiscogs testingToken $ updateOrder "545705-1" ( Just [("shipping", "50.0")] )
+    --     r `shouldSatisfy` isRight
+    --     case r of
+    --         Left _ -> expectationFailure "Request failed. Something went wrong."
+    --         Right (Just o) -> (P.value $ O.shipping o) `shouldBe` 50.0
 
     it "should list orders of authenticated user" $ do
         os <- runDiscogs testingToken $ listOrders

@@ -82,5 +82,8 @@ wantlist usr = runRequest $ Req.getUserWantList usr
 addToWantlist :: Monad m => Text -> Int -> Maybe Params -> DiscogsT m Release
 addToWantlist usr rid ps = runRequest $ Req.putReleaseNotes usr rid ps
 
+editReleaseInWantlist :: Monad m => Text -> Int -> Maybe Params -> DiscogsT m Release
+editReleaseInWantlist usr rid ps = runRequest $ Req.putReleaseNotes usr rid ps
+
 removeFromWantlist :: Monad m => Text -> Int -> DiscogsT m ()
 removeFromWantlist usr rid = runRequest $ Req.deleteReleaseFromWantlist usr rid

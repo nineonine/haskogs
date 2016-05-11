@@ -6,6 +6,7 @@ import Discogs.Types.Pagination
 import Discogs.Types.User.BasicInfo
 
 import Data.Aeson
+import Data.Text
 import GHC.Generics
 import Data.Time.Clock
 
@@ -17,6 +18,7 @@ data Releases  = Releases
 data Release = Release
     { instance_id       :: Maybe Int
     , rating            :: Int
+    , notes             :: Maybe Text
     , basic_information :: BasicInfo
     , folder_id         :: Maybe Int
     , date_added        :: UTCTime
@@ -27,6 +29,7 @@ instance FromJSON Release where
     parseJSON = withObject "release" $ \o -> do
         instance_id       <- o .:? "instance_id"
         rating            <- o .: "rating"
+        notes             <- o .:? "notes"
         basic_information <- o .: "basic_information"
         folder_id         <- o .:? "folder_id"
         date_added        <- o .: "date_added"
