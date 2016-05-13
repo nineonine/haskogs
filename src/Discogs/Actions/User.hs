@@ -1,3 +1,4 @@
+-- | Contains Database related actions
 {-# LANGUAGE OverloadedStrings #-}
 
 module Discogs.Actions.User where
@@ -22,68 +23,191 @@ import qualified Discogs.Request.User as Req
 
 -- IDENTITY SECTION --
 
+-- | Retrieve basic information about the authenticated user.
+--   <https://www.discogs.com/developers/#page:user-identity,header:user-identity-identity>
 identity :: Monad m => DiscogsT m Identity
 identity = runRequest Req.getIdentity
 
-profile :: Monad m => Text -> DiscogsT m User.User
+-- | Retrieve a user by username.
+--   <https://www.discogs.com/developers/#page:user-identity,header:user-identity-profile-get>
+profile :: Monad m
+        => Text -- ^ The username of whose profile you are requesting.
+        -> DiscogsT m User.User
 profile usr = runRequest $ Req.getProfile usr
 
-editProfile :: Monad m => Text -> Maybe Params -> DiscogsT m User.User
+-- | Edit a user’s profile data.
+--   Authentication as the user is required.
+--   <https://www.discogs.com/developers/#page:user-identity,header:user-identity-profile-post>
+editProfile :: Monad m
+            => Text -- ^ The username of the user.
+            -> Maybe Params -- ^ Optional Params
+            -> DiscogsT m User.User
 editProfile usr ps = runRequest $ Req.postProfile usr ps
 
-submissions :: Monad m => Text -> DiscogsT m Submissions
+-- | Retrieve a user’s submissions by username.
+--   Accepts Pagination parameters.
+--   <https://www.discogs.com/developers/#page:user-identity,header:user-identity-user-submissions-get>
+submissions :: Monad m
+            => Text -- ^ The username of the submissions you are trying to fetch.
+            -> DiscogsT m Submissions
 submissions usr = runRequest $ Req.getUserSubmissions usr
 
-contributions :: Monad m => Text -> DiscogsT m Contributions
+-- | Retrieve a user’s contributions by username.
+--   Accepts Pagination parameters.
+--   <https://www.discogs.com/developers/#page:user-identity,header:user-identity-user-contributions-get>
+contributions :: Monad m
+              => Text -- ^ The username of the submissions you are trying to fetch.
+              -> DiscogsT m Contributions
 contributions usr = runRequest $ Req.getUserContributions usr
 
 
 -- COLLECTION SECTION --
 
-collection :: Monad m => Text -> DiscogsT m Collection
+-- | Retrieve a list of folders in a user’s collection.
+--   If the collection has been made private by its owner, authentication as the collection owner is required.
+--   If you are not authenticated as the collection owner, only folder ID 0 (the “All” folder) will be visible (if the requested user’s collection is public).
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-collection-get>
+collection :: Monad m
+           => Text -- ^ The username of the collection you are trying to retrieve.
+           -> DiscogsT m Collection
 collection usr = runRequest $ Req.getCollection usr
 
-createFolder :: Monad m => Text -> Text -> DiscogsT m Folder
+-- | Create a new 'Folder' in a user’s collection.
+--   Authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-collection-post>
+createFolder :: Monad m
+             => Text -- ^ The username of the collection you are trying to retrieve.
+             -> Text -- ^ The name of the newly-created folder.
+             -> DiscogsT m Folder
 createFolder usr fname = runRequest $ Req.postFolder usr fname
 
-folder :: Monad m => Text -> Int -> DiscogsT m Folder
+-- | Retrieve metadata about a 'Folder' in a user’s collection.
+--   If /folder_id/ is not /0/, authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-collection-folder-get>
+folder :: Monad m
+       => Text -- ^ The username of the collection you are trying to request.
+       -> Int -- ^ The ID of the folder to request.
+       -> DiscogsT m Folder
 folder usr fname = runRequest $ Req.getCollectionFolder usr fname
 
-editFolder :: Monad m => Text -> Int -> Maybe Params -> DiscogsT m Folder
+-- | Edit a folder’s metadata. Folders 0 and 1 cannot be renamed.
+--   Authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-collection-folder-post>
+editFolder :: Monad m
+           => Text -- ^ The username of the collection you are trying to modify.
+           -> Int -- ^ The ID of the folder to modify.
+           -> Maybe Params  -- ^ Optional Params
+           -> DiscogsT m Folder
 editFolder usr fid ps = runRequest $ Req.editFolder usr fid ps
 
-deleteFolder :: Monad m => Text -> Int -> DiscogsT m ()
+-- | Delete a folder from a user’s collection. A folder must be empty before it can be deleted.
+--   Authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-collection-folder-delete>
+deleteFolder :: Monad m
+             => Text -- ^ The username of the collection you are trying to modify.
+             -> Int -- ^ The ID of the folder to delete.
+             -> DiscogsT m ()
 deleteFolder usr fid = runRequest $ Req.deleteFolder usr fid
 
-collectionReleases :: Monad m => Text -> Int -> Maybe Params -> DiscogsT m Releases
+-- | Returns the list of releases in a folder in a user’s collection.
+--   Accepts Pagination parameters.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-get-collection-releases-get>
+collectionReleases :: Monad m
+                   => Text -- ^ The username of the collection you are trying to request.
+                   -> Int -- ^ The ID of the folder to request.
+                   -> Maybe Params -- ^ Optional Params.
+                   -> DiscogsT m Releases
 collectionReleases usr fid ps = runRequest $ Req.getCollectionRels usr fid ps
 
-addReleaseToFolder :: Monad m => Text -> Int -> Int -> DiscogsT m Value
+-- | Add a release to a folder in a user’s collection.
+--   The folder_id must be non-zero – you can use 1 for “Uncategorized”.
+--   Authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-add-to-collection-folder-post>
+addReleaseToFolder :: Monad m
+                   => Text -- ^ The username of the collection you are trying to modify.
+                   -> Int -- ^ The ID of the folder to modify.
+                   -> Int -- ^ The ID of the release you are adding.
+                   -> DiscogsT m Value
 addReleaseToFolder usr fid rid = runRequest $ Req.postReleaseToFolder usr fid rid
 
-rateRelease :: Monad m => Text -> Int -> Int -> Int -> Maybe Params -> DiscogsT m ()
+-- | Change the rating on a release and/or move the instance to another folder.
+--   Authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-change-rating-of-release-post>
+rateRelease :: Monad m
+            => Text -- ^ The username of the collection you are trying to modify.
+            -> Int -- ^ The ID of the folder you are requesting.
+            -> Int -- ^ The ID of the release you are modifying.
+            -> Int -- ^ The ID of the instance.
+            -> Maybe Params -> DiscogsT m ()
 rateRelease usr fid rid iid ps = runRequest $ Req.postReleaseRating usr fid rid iid ps
 
-deleteReleaseFromFolder :: Monad m => Text -> Int -> Int -> Int -> DiscogsT m ()
+-- | Remove an instance of a release from a user’s collection folder.
+--   Authentication as the collection owner is required.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-delete-instance-from-folder-delete>
+deleteReleaseFromFolder :: Monad m
+                        => Text -- ^ The username of the collection you are trying to modify.
+                        -> Int -- ^ The ID of the folder to modify.
+                        -> Int -- ^ The ID of the release you are modifying.
+                        -> Int -- ^ The ID of the instance.
+                        -> DiscogsT m ()
 deleteReleaseFromFolder usr fid rid iid = runRequest $ Req.deleteReleaseFromFolder usr fid rid iid
 
-collectionNotesFields :: Monad m => Text -> DiscogsT m Fields
+-- | Retrieve a list of user-defined collection notes fields.
+--   If the collection has been made private by its owner, authentication as the collection owner is required.
+--   If you are not authenticated as the collection owner, only fields with public set to true will be visible.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-list-custom-fields-get>
+collectionNotesFields :: Monad m
+                      => Text -- ^ The username of the collection you are trying to modify.
+                      -> DiscogsT m Fields
 collectionNotesFields usr = runRequest $ Req.getCollectionNotes usr
 
-editInstanceFields :: Monad m => Text -> Text -> Int -> Int -> Int -> Int -> DiscogsT m ()
+-- | Change the value of a notes field on a particular instance.
+--   <https://www.discogs.com/developers/#page:user-collection,header:user-collection-edit-fields-instance-post>
+editInstanceFields :: Monad m
+                   => Text -- ^ The username of the collection you are trying to modify.
+                   -> Text -- ^ The new value of the field.
+                   -> Int -- ^ The ID of the folder to modify.
+                   -> Int -- ^ The ID of the release you are modifying.
+                   -> Int -- ^ The ID of the instance.
+                   -> Int -- ^ The ID of the field.
+                   -> DiscogsT m ()
 editInstanceFields usr val fid rid iid fid' = runRequest $ Req.postInstanceFields usr val fid rid iid fid'
 
 
 -- WANTLIST SECTION --
 
-wantlist :: Monad m => Text -> DiscogsT m Wants
+-- | Returns the list of releases in a user’s wantlist.
+--   Accepts Pagination parameters.
+--   The /notes/ field will be visible if you are authenticated as the wantlist owner.
+--   <https://www.discogs.com/developers/#page:user-wantlist,header:user-wantlist-wantlist-get>
+wantlist :: Monad m
+         => Text -- ^ The username of the wantlist you are trying to fetch.
+         -> DiscogsT m Wants
 wantlist usr = runRequest $ Req.getUserWantList usr
 
-addToWantlist :: Monad m => Text -> Int -> Maybe Params -> DiscogsT m Release
+-- | Add a release to a user’s wantlist.
+--   Authentication as the wantlist owner is required.
+--   <https://www.discogs.com/developers/#page:user-wantlist,header:user-wantlist-add-to-wantlist-put>
+addToWantlist :: Monad m
+              => Text -- ^ The username of the wantlist you are trying to fetch.
+              -> Int -- ^ The ID of the release you are adding.
+              -> Maybe Params -- ^ Optional Params.
+              -> DiscogsT m Release
 addToWantlist usr rid ps = runRequest $ Req.putReleaseNotes usr rid ps
 
-editReleaseInWantlist :: Monad m => Text -> Int -> Maybe Params -> DiscogsT m Release
+-- | Add a release to a user’s wantlist.
+--   <https://www.discogs.com/developers/#page:user-wantlist,header:user-wantlist-add-to-wantlist-put>
+editReleaseInWantlist :: Monad m
+                      => Text -- ^ The username of the wantlist you are trying to fetch.
+                      -> Int -- ^ The ID of the release you are adding.
+                      -> Maybe Params -- ^ optional Params.
+                      -> DiscogsT m Release
 editReleaseInWantlist usr rid ps = runRequest $ Req.putReleaseNotes usr rid ps
 
-removeFromWantlist :: Monad m => Text -> Int -> DiscogsT m ()
+-- | Delete a release in a user's wantlist.
+--   <https://www.discogs.com/developers/#page:user-wantlist,header:user-wantlist-add-to-wantlist-delete>
+removeFromWantlist :: Monad m
+                   => Text -- ^ The username of the wantlist you are trying to fetch.
+                   -> Int -- ^ The ID of the release you are deleting.
+                   -> DiscogsT m ()
 removeFromWantlist usr rid = runRequest $ Req.deleteReleaseFromWantlist usr rid
