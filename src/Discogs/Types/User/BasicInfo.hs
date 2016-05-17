@@ -10,11 +10,11 @@ import Data.Text
 import Data.Aeson
 
 data BasicInfo = BasicInfo
-    { labels       :: [Label]
+    { labels       :: [ReleaseLabel]
     , formats      :: [Format]
     , thumb        :: Text
     , title        :: Text
-    , artists      :: [Artist]
+    , artists      :: [ReleaseArtist]
     , resource_url :: Text
     , year         :: Int
     , _id          :: Int

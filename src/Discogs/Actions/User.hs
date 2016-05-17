@@ -116,7 +116,7 @@ collectionReleases :: Monad m
                    => Text -- ^ The username of the collection you are trying to request.
                    -> Int -- ^ The ID of the folder to request.
                    -> Maybe Params -- ^ Optional Params.
-                   -> DiscogsT m Releases
+                   -> DiscogsT m UserReleases
 collectionReleases usr fid ps = runRequest $ Req.getCollectionRels usr fid ps
 
 -- | Add a release to a folder in a user’s collection.
@@ -192,7 +192,7 @@ addToWantlist :: Monad m
               => Text -- ^ The username of the wantlist you are trying to fetch.
               -> Int -- ^ The ID of the release you are adding.
               -> Maybe Params -- ^ Optional Params.
-              -> DiscogsT m Release
+              -> DiscogsT m UserRelease
 addToWantlist usr rid ps = runRequest $ Req.putReleaseNotes usr rid ps
 
 -- | Add a release to a user’s wantlist.
@@ -201,7 +201,7 @@ editReleaseInWantlist :: Monad m
                       => Text -- ^ The username of the wantlist you are trying to fetch.
                       -> Int -- ^ The ID of the release you are adding.
                       -> Maybe Params -- ^ optional Params.
-                      -> DiscogsT m Release
+                      -> DiscogsT m UserRelease
 editReleaseInWantlist usr rid ps = runRequest $ Req.putReleaseNotes usr rid ps
 
 -- | Delete a release in a user's wantlist.

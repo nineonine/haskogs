@@ -109,6 +109,8 @@ for testing IO.
 + Automatic pausing when request limit reached
 + More Examples
 + Finish Documentation
++ Types Refactoring : Reduce the amount of types, make types ore generic
++ Types Refactoring : explicit FromJSON / ToJSON instances to avoid clashes with reserved words
 
 ### Contributions
 + Fork this repo

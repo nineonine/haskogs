@@ -8,7 +8,7 @@ import Data.Text
 import Data.Aeson
 import GHC.Generics
 
-data Release = Release
+data ArtistRelease = ArtistRelease
     { thumb        :: Text
     , artist       :: Text
     , main_release :: Maybe Int
@@ -22,5 +22,5 @@ data Release = Release
 
 data ArtistReleases = ArtistReleases
     { pagination :: Maybe Pagination
-    , releases   :: [Release]
+    , releases   :: [ArtistRelease]
     } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)

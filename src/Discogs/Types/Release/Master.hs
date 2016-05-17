@@ -23,7 +23,7 @@ data Master = Master
       , id                 :: Int
       , genres             :: [Text]
       , title              :: Text
-      , artists            :: [Artist]
+      , artists            :: [ReleaseArtist]
       , tracklist          :: [Track]
       , uri                :: Text
       , data_quality       :: Text

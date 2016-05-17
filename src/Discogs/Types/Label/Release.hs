@@ -8,7 +8,7 @@ import Data.Text
 import Data.Aeson
 import GHC.Generics
 
-data Release = Release
+data LabelRelease = LabelRelease
     { status       :: Text
     , thumb        :: Text
     , title        :: Text
@@ -22,5 +22,5 @@ data Release = Release
 
 data LabelReleases = LabelReleases
     { pagination :: Maybe Pagination
-    , releases   :: [Release]
+    , releases   :: [LabelRelease]
     } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)

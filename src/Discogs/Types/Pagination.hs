@@ -2,7 +2,6 @@
 
 module Discogs.Types.Pagination where
 
-import Data.Text
 import Data.Aeson
 import GHC.Generics
 

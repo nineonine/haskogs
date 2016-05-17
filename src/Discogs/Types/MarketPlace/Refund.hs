@@ -11,21 +11,21 @@ import           GHC.Generics
 
 data Refund = Refund
     { amount :: Int
-    , order  :: Maybe Order
+    , order  :: Maybe OrderResource
     } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
 
-data Order = Order
+data OrderResource = OrderResource
     { resource_url :: Text
     , _id          :: Text
     } deriving (Read, Show, Eq)
 
-instance FromJSON Order where
+instance FromJSON OrderResource where
     parseJSON = withObject "order" $ \o -> do
         resource_url <- o .: "resource_url"
         _id          <- o .: "id"
-        return Order{..}
+        return OrderResource{..}
 
-instance ToJSON Order where
-    toJSON Order{..} = object [
+instance ToJSON OrderResource where
+    toJSON OrderResource{..} = object [
         "resource_url" .= resource_url,
         "id"           .= _id ]

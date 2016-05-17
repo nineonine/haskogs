@@ -10,12 +10,12 @@ import Data.Text
 import GHC.Generics
 import Data.Time.Clock
 
-data Releases  = Releases
+data UserReleases  = UserReleases
     { pagination :: Maybe Pagination
-    , releases   :: [Release]
+    , releases   :: [UserRelease]
     } deriving (Read, Show, Eq, Generic, FromJSON, ToJSON)
 
-data Release = Release
+data UserRelease = UserRelease
     { instance_id       :: Maybe Int
     , rating            :: Int
     , notes             :: Maybe Text
@@ -25,7 +25,7 @@ data Release = Release
     , _id               :: Int
     } deriving (Show, Read, Eq)
 
-instance FromJSON Release where
+instance FromJSON UserRelease where
     parseJSON = withObject "release" $ \o -> do
         instance_id       <- o .:? "instance_id"
         rating            <- o .: "rating"
@@ -34,10 +34,10 @@ instance FromJSON Release where
         folder_id         <- o .:? "folder_id"
         date_added        <- o .: "date_added"
         _id               <- o .: "id"
-        return Release{..}
+        return UserRelease{..}
 
-instance ToJSON Release where
-    toJSON Release{..} = object [
+instance ToJSON UserRelease where
+    toJSON UserRelease{..} = object [
         "instance_id"       .= instance_id,
         "rating"            .= rating,
         "basic_information" .= basic_information,

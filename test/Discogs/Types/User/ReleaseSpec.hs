@@ -24,5 +24,5 @@ spec = describe "Discogs.Types.User.Release" $ do
             relExample `shouldSatisfy` not . LBS.null
 
         it "can parse Releases from json" $ do
-            let decoded = eitherDecode relExample :: Either String Releases
+            let decoded = eitherDecode relExample :: Either String UserReleases
             decoded `shouldSatisfy` isRight

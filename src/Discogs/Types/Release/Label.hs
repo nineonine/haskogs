@@ -6,7 +6,7 @@ import Data.Text
 import Data.Aeson
 import GHC.Generics
 
-data Label = Label
+data ReleaseLabel = ReleaseLabel
         { id           :: Int
         , resource_url :: Text
         , entity_type  :: Text

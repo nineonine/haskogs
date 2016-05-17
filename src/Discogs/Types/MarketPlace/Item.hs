@@ -8,25 +8,25 @@ import Discogs.Types.MarketPlace.Price
 import           Data.Aeson
 import           Data.Text
 
-data Release = Release
+data ItemRelease = ItemRelease
     { release_id  :: Int
     , description :: Text
     } deriving (Show, Read, Eq)
 
 data Item = Item
-    { release :: Release
+    { release :: ItemRelease
     , price   :: Price
     , _id     :: Int
     } deriving (Show, Read, Eq)
 
-instance FromJSON Release where
+instance FromJSON ItemRelease where
     parseJSON = withObject "release" $ \o -> do
         release_id  <- o .: "id"
         description <- o .: "description"
-        return Release{..}
+        return ItemRelease{..}
 
-instance ToJSON Release where
-    toJSON Release{..} = object [
+instance ToJSON ItemRelease where
+    toJSON ItemRelease{..} = object [
         "id"          .= release_id,
         "description" .= description ]
 

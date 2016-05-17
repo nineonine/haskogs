@@ -33,7 +33,7 @@ data Listing = Listing
     , uri              :: Text
     , comments         :: Text
     , seller           :: Alias
-    , release          :: Release
+    , release          :: ListingRelease
     , resource_url     :: Text
     , audio            :: Bool
     } deriving (Read, Show, Eq)

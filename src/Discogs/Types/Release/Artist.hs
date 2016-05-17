@@ -6,7 +6,7 @@ import Data.Text
 import Data.Aeson
 import GHC.Generics
 
-data Artist = Artist
+data ReleaseArtist = ReleaseArtist
      { join         :: Text
      , name         :: Text
      , anv          :: Text

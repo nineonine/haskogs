@@ -24,7 +24,7 @@ spec = describe "Discogs.Types.Label.Release" $ do
             labelExample `shouldSatisfy` not . LBS.null
 
         it "can parse label release from json" $ do
-            let decoded = eitherDecode labelExample :: Either String Release
+            let decoded = eitherDecode labelExample :: Either String LabelRelease
             decoded `shouldSatisfy` isRight
 
     describe "LabelReleases" $ do

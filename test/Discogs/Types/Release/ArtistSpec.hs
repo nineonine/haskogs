@@ -24,5 +24,5 @@ spec = describe "Discogs.Types.Release.Artist" $ do
             raExample `shouldSatisfy` not . LBS.null
 
         it "can parse artist from json" $ do
-            let decoded = eitherDecode raExample :: Either String Artist
+            let decoded = eitherDecode raExample :: Either String ReleaseArtist
             decoded `shouldSatisfy` isRight

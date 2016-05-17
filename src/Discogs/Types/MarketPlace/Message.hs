@@ -28,7 +28,7 @@ data Message = Message
     , timestamp :: UTCTime
     , message   :: Text
     , mtype     :: Maybe Text
-    , order     :: Order
+    , order     :: OrderResource
     , subject   :: Text
     } deriving (Show, Read, Eq)
 

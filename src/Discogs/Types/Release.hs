@@ -19,9 +19,9 @@ import GHC.Generics
 data Release = Release
     { styles             :: Maybe [Text]
     , videos             :: Maybe [Video]
-    , series             :: [Label]
+    , series             :: [ReleaseLabel]
     , released_formatted :: Text
-    , labels             :: [Label]
+    , labels             :: [ReleaseLabel]
     , community          :: Community
     , year               :: Int
     , images             :: [Image]
@@ -29,9 +29,9 @@ data Release = Release
     , id                 :: Int
     , genres             :: [Text]
     , thumb              :: Text
-    , extraartists       :: Maybe [Artist]
+    , extraartists       :: Maybe [ReleaseArtist]
     , title              :: Text
-    , artists            :: [Artist]
+    , artists            :: [ReleaseArtist]
     , date_changed       :: Text
     , master_id          :: Maybe Int
     , tracklist          :: Maybe [Track]
