@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -12,49 +10,59 @@ import           Discogs.Types.MarketPlace.Refund
 import           Data.Aeson
 import           Data.Text
 import           Data.Time.Clock
-import           GHC.Generics hiding (from)
 
 data Messages = Messages
-    { pagination :: Maybe Pagination
-    , messages   :: [Message]
-    } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+    { msgs_pagination :: Maybe Pagination
+    , msgs_messages   :: [Message]
+    } deriving (Show, Read, Eq)
+
+instance FromJSON Messages where
+    parseJSON = withObject "searchResult" $ \o -> do
+        msgs_pagination <- o.:? "pagination"
+        msgs_messages   <- o .: "messages"
+        return Messages{..}
+
+instance ToJSON Messages where
+    toJSON Messages{..} = object [
+        "pagination" .= msgs_pagination ,
+        "messages"    .= msgs_messages ]
 
 data Message = Message
-    { refund    :: Maybe Refund
-    , from      :: Maybe Alias
-    , actor     :: Maybe Alias
-    , original  :: Maybe Int
-    , new       :: Maybe Int
-    , timestamp :: UTCTime
-    , message   :: Text
-    , mtype     :: Maybe Text
-    , order     :: OrderResource
-    , subject   :: Text
+    { message_refund    :: Maybe Refund
+    , message_from      :: Maybe Alias
+    , message_actor     :: Maybe Alias
+    , message_original  :: Maybe Int
+    , message_new       :: Maybe Int
+    , message_timestamp :: UTCTime
+    , message_message   :: Text
+    , message_type      :: Maybe Text
+    , message_order     :: OrderResource
+    , message_subject   :: Text
     } deriving (Show, Read, Eq)
 
 instance FromJSON Message where
     parseJSON = withObject "message" $ \o -> do
-        refund    <- o .:? "refund"
-        from      <- o .:? "from"
-        actor     <- o .:? "actor"
-        original  <- o .:? "original"
-        new       <- o .:? "new"
-        timestamp <- o .: "timestamp"
-        message   <- o .: "message"
-        mtype     <- o .:? "type"
-        order     <- o .: "order"
-        subject   <- o .: "subject"
+        message_refund    <- o .:? "refund"
+        message_from      <- o .:? "from"
+        message_actor     <- o .:? "actor"
+        message_original  <- o .:? "original"
+        message_new       <- o .:? "new"
+        message_timestamp <- o .: "timestamp"
+        message_message   <- o .: "message"
+        message_type      <- o .:? "type"
+        message_order     <- o .: "order"
+        message_subject   <- o .: "subject"
         return Message{..}
 
 instance ToJSON Message where
     toJSON Message{..} = object [
-        "refund"    .= refund,
-        "from"      .= from,
-        "actor"     .= actor,
-        "original"  .= original,
-        "new"       .= new,
-        "timestamp" .= timestamp,
-        "message"   .= message,
-        "type"      .= mtype,
-        "order"     .= order,
-        "subject"   .= subject ]
+        "refund"    .= message_refund,
+        "from"      .= message_from,
+        "actor"     .= message_actor,
+        "original"  .= message_original,
+        "new"       .= message_new,
+        "timestamp" .= message_timestamp,
+        "message"   .= message_message,
+        "type"      .= message_type,
+        "order"     .= message_order,
+        "subject"   .= message_subject ]

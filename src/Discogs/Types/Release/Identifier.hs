@@ -7,19 +7,19 @@ import Data.Aeson
 
 data Identifier = Identifier
         { itype       :: Text
-        , description :: Maybe Text
-        , value       :: Text
+        , idescription :: Maybe Text
+        , ivalue       :: Text
         } deriving (Show, Read, Eq)
 
 instance FromJSON Identifier where
     parseJSON = withObject "identifier" $ \o -> do
         itype       <- o .: "type"
-        description <- o .:? "description"
-        value       <- o .: "value"
+        idescription <- o .:? "description"
+        ivalue       <- o .: "value"
         return Identifier{..}
 
 instance ToJSON Identifier where
     toJSON Identifier{..} = object [
         "type"        .= itype,
-        "description" .= description,
-        "value"       .= value ]
+        "description" .= idescription,
+        "value"       .= ivalue ]

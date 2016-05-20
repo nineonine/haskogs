@@ -1,15 +1,31 @@
-{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
 module Discogs.Types.Release.Label where
 
 import Data.Text
 import Data.Aeson
-import GHC.Generics
 
 data ReleaseLabel = ReleaseLabel
-        { id           :: Int
-        , resource_url :: Text
-        , entity_type  :: Text
-        , catno        :: Text
-        , name         :: Text
-        } deriving (Show, Read, Eq, Generic, ToJSON, FromJSON)
+        { rl_id           :: Int
+        , rl_resource_url :: Text
+        , rl_entity_type  :: Text
+        , rl_catno        :: Text
+        , rl_name         :: Text
+        } deriving (Show, Read, Eq)
+
+instance FromJSON ReleaseLabel where
+    parseJSON = withObject "label" $ \o -> do
+        rl_id <- o .: "id"
+        rl_resource_url <- o .: "resource_url"
+        rl_entity_type <- o .: "entity_type"
+        rl_catno <- o .: "catno"
+        rl_name <- o .: "name"
+        return ReleaseLabel{..}
+
+instance ToJSON ReleaseLabel where
+    toJSON ReleaseLabel{..} = object [
+        "id" .= rl_id,
+        "resource_url" .= rl_resource_url,
+        "entity_type" .= rl_entity_type,
+        "catno" .= rl_catno,
+        "name" .= rl_name ]

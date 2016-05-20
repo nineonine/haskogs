@@ -2,42 +2,42 @@
 
 module Discogs.Types.User.BasicInfo where
 
-import Discogs.Types.Release.Label hiding (resource_url)
+import Discogs.Types.Release.Label
 import Discogs.Types.Release.Format
-import Discogs.Types.Release.Artist hiding (resource_url)
+import Discogs.Types.Release.Artist
 
 import Data.Text
 import Data.Aeson
 
 data BasicInfo = BasicInfo
-    { labels       :: [ReleaseLabel]
-    , formats      :: [Format]
-    , thumb        :: Text
-    , title        :: Text
-    , artists      :: [ReleaseArtist]
-    , resource_url :: Text
-    , year         :: Int
-    , _id          :: Int
+    { bi_labels       :: [ReleaseLabel]
+    , bi_formats      :: [Format]
+    , bi_thumb        :: Text
+    , bi_title        :: Text
+    , bi_artists      :: [ReleaseArtist]
+    , bi_resource_url :: Text
+    , bi_year         :: Int
+    , bi_id           :: Int
     } deriving (Show, Read, Eq)
 
 instance FromJSON BasicInfo where
     parseJSON = withObject "basic_information" $ \o -> do
-        labels       <- o .: "labels"
-        formats      <- o .: "formats"
-        thumb        <- o .: "thumb"
-        title        <- o .: "title"
-        artists      <- o .: "artists"
-        resource_url <- o .: "resource_url"
-        year         <- o .: "year"
-        _id          <- o .: "id"
+        bi_labels       <- o .: "labels"
+        bi_formats      <- o .: "formats"
+        bi_thumb        <- o .: "thumb"
+        bi_title        <- o .: "title"
+        bi_artists      <- o .: "artists"
+        bi_resource_url <- o .: "resource_url"
+        bi_year         <- o .: "year"
+        bi_id          <- o .: "id"
         return BasicInfo{..}
 
 instance ToJSON BasicInfo where
     toJSON BasicInfo{..} = object [
-        "labels"       .= labels,
-        "formats"      .= formats,
-        "thumb"        .= thumb,
-        "title"        .= title,
-        "artists"      .= artists,
-        "resource_url" .= resource_url,
-        "id"           .= _id ]
+        "labels"       .= bi_labels,
+        "formats"      .= bi_formats,
+        "thumb"        .= bi_thumb,
+        "title"        .= bi_title,
+        "artists"      .= bi_artists,
+        "resource_url" .= bi_resource_url,
+        "id"           .= bi_id ]

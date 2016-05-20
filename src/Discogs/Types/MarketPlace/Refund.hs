@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveAnyClass    #-}
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -7,25 +5,35 @@ module Discogs.Types.MarketPlace.Refund where
 
 import           Data.Text
 import           Data.Aeson
-import           GHC.Generics
 
 data Refund = Refund
-    { amount :: Int
-    , order  :: Maybe OrderResource
-    } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+    { refund_amount :: Int
+    , refund_order  :: Maybe OrderResource
+    } deriving (Show, Read, Eq)
+
+instance FromJSON Refund where
+    parseJSON = withObject "refund" $ \o -> do
+        refund_amount <- o .: "amount"
+        refund_order <- o .:? "order"
+        return Refund{..}
+
+instance ToJSON Refund where
+    toJSON Refund{..} = object [
+        "amount" .= refund_amount,
+        "order"  .= refund_order ]
 
 data OrderResource = OrderResource
-    { resource_url :: Text
-    , _id          :: Text
+    { or_resource_url :: Text
+    , or_id          :: Text
     } deriving (Read, Show, Eq)
 
 instance FromJSON OrderResource where
     parseJSON = withObject "order" $ \o -> do
-        resource_url <- o .: "resource_url"
-        _id          <- o .: "id"
+        or_resource_url <- o .: "resource_url"
+        or_id          <- o .: "id"
         return OrderResource{..}
 
 instance ToJSON OrderResource where
     toJSON OrderResource{..} = object [
-        "resource_url" .= resource_url,
-        "id"           .= _id ]
+        "resource_url" .= or_resource_url,
+        "id"           .= or_id ]

@@ -1,34 +1,35 @@
-{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Discogs.Types.Image where
 
-import Data.Text
-import Data.Aeson
+import           Data.Aeson
+import           Data.Text
 
 data Image = Image
-    { uri          :: Text
-    , height       :: Int
-    , width        :: Int
-    , resource_url :: Text
-    , imgtype      :: Text
-    , uri150       :: Text
+    { img_uri          :: Text
+    , img_height       :: Int
+    , img_width        :: Int
+    , img_resource_url :: Text
+    , img_type         :: Text
+    , img_uri150       :: Text
     } deriving (Show, Read, Eq)
 
 instance FromJSON Image where
     parseJSON = withObject "image" $ \o -> do
-        uri          <- o .: "uri"
-        height       <- o .: "height"
-        width        <- o .: "width"
-        resource_url <- o .: "resource_url"
-        imgtype      <- o .: "type"
-        uri150       <- o .: "uri150"
+        img_uri          <- o .: "uri"
+        img_height       <- o .: "height"
+        img_width        <- o .: "width"
+        img_resource_url <- o .: "resource_url"
+        img_type         <- o .: "type"
+        img_uri150       <- o .: "uri150"
         return Image{..}
 
 instance ToJSON Image where
     toJSON Image{..} = object [
-        "uri"          .= uri,
-        "height"       .= height,
-        "width"        .= width,
-        "resource_url" .= resource_url,
-        "type"         .= imgtype,
-        "uri150"       .= uri150 ]
+        "uri"          .= img_uri,
+        "height"       .= img_height,
+        "width"        .= img_width,
+        "resource_url" .= img_resource_url,
+        "type"         .= img_type,
+        "uri150"       .= img_uri150 ]

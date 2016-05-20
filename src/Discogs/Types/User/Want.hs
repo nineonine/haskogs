@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards, DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
 module Discogs.Types.User.Want where
 
@@ -7,35 +7,45 @@ import Discogs.Types.User.BasicInfo
 
 import Data.Text
 import Data.Aeson
-import GHC.Generics
 import Data.Time.Clock
 
 data Wants = Wants
-    { pagination :: Maybe Pagination
-    , wants      :: [Want]
-    } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+    { wants_pagination :: Maybe Pagination
+    , wants_wants      :: [Want]
+    } deriving (Show, Read, Eq)
+
+instance FromJSON Wants where
+    parseJSON = withObject "searchResult" $ \o -> do
+        wants_pagination <- o.:? "pagination"
+        wants_wants   <- o .: "wants"
+        return Wants{..}
+
+instance ToJSON Wants where
+    toJSON Wants{..} = object [
+        "pagination" .= wants_pagination ,
+        "wants"   .= wants_wants ]
 
 data Want = Want
-    { rating            :: Int
-    , resource_url      :: Text
-    , basic_information :: BasicInfo
-    , _id               :: Int
-    , date_added        :: UTCTime
+    { want_rating            :: Int
+    , want_resource_url      :: Text
+    , want_basic_information :: BasicInfo
+    , want_id                :: Int
+    , want_date_added        :: UTCTime
     } deriving (Show, Read, Eq)
 
 instance FromJSON Want where
     parseJSON = withObject "want" $ \o -> do
-        rating            <- o .: "rating"
-        resource_url      <- o .: "resource_url"
-        basic_information <- o .: "basic_information"
-        _id               <- o .: "id"
-        date_added        <- o .: "date_added"
+        want_rating            <- o .: "rating"
+        want_resource_url      <- o .: "resource_url"
+        want_basic_information <- o .: "basic_information"
+        want_id                <- o .: "id"
+        want_date_added        <- o .: "date_added"
         return Want{..}
 
 instance ToJSON Want where
     toJSON Want{..} = object [
-        "rating"            .= rating,
-        "resource_url"      .= resource_url,
-        "basic_information" .= basic_information,
-        "id"                .= _id,
-        "date_added"        .= date_added ]
+        "rating"            .= want_rating,
+        "resource_url"      .= want_resource_url,
+        "basic_information" .= want_basic_information,
+        "id"                .= want_id,
+        "date_added"        .= want_date_added ]

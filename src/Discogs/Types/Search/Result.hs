@@ -1,64 +1,65 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Discogs.Types.Search.Result where
 
-import Data.Text
-import Control.Applicative
-import Data.Aeson hiding (Result)
+import           Control.Applicative
+import           Data.Aeson          hiding (Result)
+import           Data.Text
 
 data Result = Result
-    { thumb        :: Text
-    , style        :: Maybe [Text]
-    , format       :: Maybe [Text]
-    , country      :: Maybe Text
-    , barcode      :: Maybe [Text]
-    , community    :: Maybe Object
-    , label        :: Maybe [Text]
-    , catno        :: Maybe Text
-    , year         :: Maybe Text
-    , genre        :: Maybe [Text]
-    , resource_url :: Text
-    , title        :: Text
-    , uri          :: Text
-    , stype        :: Text
-    , _id          :: Int
+    { result_thumb        :: Text
+    , result_style        :: Maybe [Text]
+    , result_format       :: Maybe [Text]
+    , result_country      :: Maybe Text
+    , result_barcode      :: Maybe [Text]
+    , result_community    :: Maybe Object
+    , result_label        :: Maybe [Text]
+    , result_catno        :: Maybe Text
+    , result_year         :: Maybe Text
+    , result_genre        :: Maybe [Text]
+    , result_resource_url :: Text
+    , result_title        :: Text
+    , result_uri          :: Text
+    , result_type         :: Text
+    , result_id           :: Int
     } deriving (Show, Read, Eq)
 
 instance FromJSON Result where
     parseJSON = withObject "result" $ \o -> do
-        label        <- optional (o .: "label")
-        thumb        <- o .: "thumb"
-        style        <- o .:? "style"
-        format       <- o .:? "format"
-        country      <- o .:? "country"
-        barcode      <- o .:? "barcode"
-        community    <- o .:? "community"
-        catno        <- o .:? "catno"
-        year         <- o .:? "year"
-        genre        <- o .:? "genre"
-        resource_url <- o .: "resource_url"
-        title        <- o .: "title"
-        uri          <- o .: "uri"
-        stype        <- o .: "type"
-        _id          <- o .: "id"
+        result_label        <- optional (o .: "label")
+        result_thumb        <- o .: "thumb"
+        result_style        <- o .:? "style"
+        result_format       <- o .:? "format"
+        result_country      <- o .:? "country"
+        result_barcode      <- o .:? "barcode"
+        result_community    <- o .:? "community"
+        result_catno        <- o .:? "catno"
+        result_year         <- o .:? "year"
+        result_genre        <- o .:? "genre"
+        result_resource_url <- o .: "resource_url"
+        result_title        <- o .: "title"
+        result_uri          <- o .: "uri"
+        result_type         <- o .: "type"
+        result_id           <- o .: "id"
         return Result{..}
 
 instance ToJSON Result where
     toJSON Result{..} = object [
-        "thumb"        .= thumb,
-        "style"        .= style,
-        "format"       .= format,
-        "country"      .= country,
-        "barcode"      .= barcode,
-        "community"    .= country,
-        "barcode"      .= barcode,
-        "community"    .= community,
-        "label"        .= label,
-        "catno"        .= catno,
-        "year"         .= year,
-        "genre"        .= genre,
-        "resource_url" .= resource_url,
-        "title"        .= title,
-        "uri"          .= uri,
-        "type"        .= stype,
-        "id"           .= _id ]
+        "thumb"        .= result_thumb,
+        "style"        .= result_style,
+        "format"       .= result_format,
+        "country"      .= result_country,
+        "barcode"      .= result_barcode,
+        "community"    .= result_country,
+        "barcode"      .= result_barcode,
+        "community"    .= result_community,
+        "label"        .= result_label,
+        "catno"        .= result_catno,
+        "year"         .= result_year,
+        "genre"        .= result_genre,
+        "resource_url" .= result_resource_url,
+        "title"        .= result_title,
+        "uri"          .= result_uri,
+        "type"         .= result_type,
+        "id"           .= result_id ]

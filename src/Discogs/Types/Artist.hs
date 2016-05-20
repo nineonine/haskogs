@@ -1,63 +1,64 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Discogs.Types.Artist where
 
-import Discogs.Types.Artist.Member
-import Discogs.Types.Image
-import Discogs.Types.Alias
+import           Discogs.Types.Alias
+import           Discogs.Types.Artist.Member
+import           Discogs.Types.Image
 
-import Data.Text
-import Data.Aeson
-import Control.Applicative
+import           Control.Applicative
+import           Data.Aeson
+import           Data.Text
 
 data Artist = Artist
-    { profile        :: Text
-    , releases_url   :: Text
-    , name           :: Text
-    , realname       :: Maybe Text
-    , groups         :: Maybe [Member]
-    , uri            :: Text
-    , members        :: Maybe [Member]
-    , urls           :: Maybe [Text]
-    , images         :: Maybe [Image]
-    , resource_url   :: Text
-    , aliases        :: Maybe [Alias]
-    , _id            :: Int
-    , data_quality   :: Text
-    , namevariations :: Maybe [Text]
+    { artist_profile        :: Text
+    , artist_releases_url   :: Text
+    , artist_name           :: Text
+    , artist_realname       :: Maybe Text
+    , artist_groups         :: Maybe [Member]
+    , artist_uri            :: Text
+    , artist_members        :: Maybe [Member]
+    , artist_urls           :: Maybe [Text]
+    , artist_images         :: Maybe [Image]
+    , artist_resource_url   :: Text
+    , artist_aliases        :: Maybe [Alias]
+    , artist_id             :: Int
+    , artist_data_quality   :: Text
+    , artist_namevariations :: Maybe [Text]
     } deriving (Show, Read, Eq)
 
 instance FromJSON Artist where
     parseJSON = withObject "artist" $ \o -> do
-        profile          <- o .: "profile"
-        releases_url     <- o .: "releases_url"
-        name             <- o .: "name"
-        realname         <- o .:? "realname"
-        groups           <- optional (o .: "groups")
-        uri              <- o .: "uri"
-        members          <- o .:? "members"
-        urls             <- o .:? "urls"
-        images           <- o .:? "images"
-        resource_url     <- o .: "resource_url"
-        aliases          <- optional (o .: "aliases")
-        _id              <- o .: "id"
-        data_quality     <- o .: "data_quality"
-        namevariations   <- o .:? "namevariations"
+        artist_profile          <- o .: "profile"
+        artist_releases_url     <- o .: "releases_url"
+        artist_name             <- o .: "name"
+        artist_realname         <- o .:? "realname"
+        artist_groups           <- optional (o .: "groups")
+        artist_uri              <- o .: "uri"
+        artist_members          <- o .:? "members"
+        artist_urls             <- o .:? "urls"
+        artist_images           <- o .:? "images"
+        artist_resource_url     <- o .: "resource_url"
+        artist_aliases          <- optional (o .: "aliases")
+        artist_id               <- o .: "id"
+        artist_data_quality     <- o .: "data_quality"
+        artist_namevariations   <- o .:? "namevariations"
         return Artist{..}
 
 instance ToJSON Artist where
     toJSON Artist{..} = object [
-        "profile"        .= profile,
-        "releases_url"   .= releases_url,
-        "name"           .= name,
-        "realname"       .= realname,
-        "groups"         .= groups,
-        "uri"            .= uri,
-        "members"        .= members,
-        "urls"           .= urls,
-        "images"         .= images,
-        "resource_url"   .= resource_url,
-        "aliases"        .= aliases,
-        "id"             .= _id,
-        "data_quality"   .= data_quality,
-        "namevariations" .= namevariations ]
+        "profile"        .= artist_profile,
+        "releases_url"   .= artist_releases_url,
+        "name"           .= artist_name,
+        "realname"       .= artist_realname,
+        "groups"         .= artist_groups,
+        "uri"            .= artist_uri,
+        "members"        .= artist_members,
+        "urls"           .= artist_urls,
+        "images"         .= artist_images,
+        "resource_url"   .= artist_resource_url,
+        "aliases"        .= artist_aliases,
+        "id"             .= artist_id,
+        "data_quality"   .= artist_data_quality,
+        "namevariations" .= artist_namevariations ]

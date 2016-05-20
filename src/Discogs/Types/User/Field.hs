@@ -9,29 +9,29 @@ import GHC.Generics
 data Fields = Fields { fields :: [Field] } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
 
 data Field = Field
-    { _lines   :: Maybe Int
-    , options  :: Maybe [Text]
-    , position :: Int
-    , name     :: Text
-    , _type    :: Text
-    , _id      :: Int
+    { field_lines   :: Maybe Int
+    , field_options  :: Maybe [Text]
+    , field_position :: Int
+    , field_name     :: Text
+    , field_type    :: Text
+    , field_id      :: Int
     } deriving (Show, Read, Eq)
 
 instance FromJSON Field where
     parseJSON = withObject "field" $ \o -> do
-        _lines   <- o .:? "lines"
-        options  <- o .:? "options"
-        position <- o .: "position"
-        name     <- o .: "name"
-        _type    <- o .: "type"
-        _id      <- o .: "id"
+        field_lines   <- o .:? "lines"
+        field_options  <- o .:? "options"
+        field_position <- o .: "position"
+        field_name     <- o .: "name"
+        field_type    <- o .: "type"
+        field_id      <- o .: "id"
         return Field{..}
 
 instance ToJSON Field where
     toJSON Field{..} = object [
-        "lines"    .= _lines,
-        "options"  .= options,
-        "position" .= position,
-        "name"     .= name,
-        "type"     .= _type,
-        "id"       .= _id ]
+        "lines"    .= field_lines,
+        "options"  .= field_options,
+        "position" .= field_position,
+        "name"     .= field_name,
+        "type"     .= field_type,
+        "id"       .= field_id ]

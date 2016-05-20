@@ -6,23 +6,23 @@ import Data.Text
 import Data.Aeson
 
 data Identity = Identity
-    { resource_url  :: Text
-    , _id           :: Int
-    , username      :: Text
-    , consumer_name :: Text
+    { id_resource_url  :: Text
+    , id_id            :: Int
+    , id_username      :: Text
+    , id_consumer_name :: Text
     } deriving (Show, Read, Eq)
 
 instance FromJSON Identity where
     parseJSON = withObject "identity" $ \o -> do
-        resource_url  <- o .: "resource_url"
-        _id           <- o .: "id"
-        username      <- o .: "username"
-        consumer_name <- o .: "consumer_name"
+        id_resource_url  <- o .: "resource_url"
+        id_id            <- o .: "id"
+        id_username      <- o .: "username"
+        id_consumer_name <- o .: "consumer_name"
         return Identity{..}
 
 instance ToJSON Identity where
     toJSON Identity{..} = object [
-        "resource_url"  .= resource_url,
-        "id"            .= _id,
-        "username"      .= username,
-        "consumer_name" .= consumer_name ]
+        "resource_url"  .= id_resource_url,
+        "id"            .= id_id,
+        "username"      .= id_username,
+        "consumer_name" .= id_consumer_name ]
