@@ -2,18 +2,10 @@
 
 module Discogs.Actions.DatabaseSpec where
 
-import qualified Discogs.Types.Release as R
-import qualified Discogs.Types.Artist as A
-import qualified Discogs.Types.Label as L
-import qualified Discogs.Types.Search as S
-import qualified Discogs.Types.Release.Master as M
-import qualified Discogs.Types.Release.Versions as RV
-import qualified Discogs.Types.Artist.Release as AR
-import qualified Discogs.Types.Label.Release as LR
-import qualified Discogs.Types.Pagination as P
+import Discogs.Types
+import Discogs.Types.Discogs
 
 import Discogs.Actions.Database
-import Discogs.Types.Discogs
 
 import  qualified Data.ByteString.Lazy as LBS
 import Test.Hspec
@@ -36,7 +28,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just r) ->
-                R.title r `shouldBe` "Stockholm"
+                release_title r `shouldBe` "Stockholm"
 
     it "should be able to get artist" $ do
         resp <- runDiscogsAnon $ artist 1
@@ -44,7 +36,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just a) ->
-                A.name a `shouldBe` "The Persuader"
+                artist_name a `shouldBe` "The Persuader"
 
     it "should be able to get master 1001" $ do
         resp <- runDiscogsAnon $ master 1001
@@ -52,7 +44,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just m) ->
-                M.title m `shouldBe` "Diese Momente EP"
+                master_title m `shouldBe` "Diese Momente EP"
 
     it "should be able to get label" $ do
         resp <- runDiscogsAnon $ label 1001
@@ -60,7 +52,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just l) ->
-                L.name l `shouldBe` "Muzik Magazine"
+                label_name l `shouldBe` "Muzik Magazine"
 
     it "should be able to get all master 150 release versions" $ do
         resp <- runDiscogsAnon $ releaseVersions 150
@@ -68,7 +60,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just rv) ->
-                length (RV.versions rv) `shouldBe` 4
+                length (versions_versions rv) `shouldBe` 4
 
     it "should be able to get all artist releases" $ do
         resp <- runDiscogsAnon $ artistReleases 1020
@@ -76,7 +68,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just ar) ->
-                length (AR.releases ar) `shouldBe` 9
+                length (ar_releases ar) `shouldBe` 9
 
     it "should be able to get all label releases" $ do
         resp <- runDiscogsAnon $ labelReleases 50
@@ -84,7 +76,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just lr) ->
-                length (LR.releases lr) `shouldBe` 35
+                length (lr_releases lr) `shouldBe` 35
 
     it "should be able to perform search" $ do
         resp <- runDiscogs testingToken $ search [("artist", "robert hood")]
@@ -92,4 +84,4 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just sr) ->
-                P.page (S.pagination sr) `shouldSatisfy` (==1)
+                page (sr_pagination sr) `shouldSatisfy` (==1)

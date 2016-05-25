@@ -2,18 +2,10 @@
 
 module Discogs.Actions.UserSpec where
 
-import qualified Discogs.Types.User.Folder as Fldr
-import qualified Discogs.Types.User.Identity as I
-import qualified Discogs.Types.User.Submission as S
-import qualified Discogs.Types.User.Collection as Coll
-import qualified Discogs.Types.User.Contribution as Cont
-import qualified Discogs.Types.User.Release as R
-import qualified Discogs.Types.User.Field as Fld
-import qualified Discogs.Types.User.Want as W
-import qualified Discogs.Types.User as User
+import Discogs.Types
+import Discogs.Types.Discogs
 
 import Discogs.Actions.User
-import Discogs.Types.Discogs
 
 import Discogs.Tools
 
@@ -47,35 +39,35 @@ spec = describe "Discogs.Actions.User" $ do
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just identity ) -> do
-                I.username identity `shouldBe` "chemik_ck"
+                id_username identity `shouldBe` "chemik_ck"
 
     it "should return user profile" $ do
         r <- runDiscogs testingToken $ profile testingUser
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just prfl ) -> do
-                User.email prfl `shouldBe` Just "mail4chemik@gmail.com"
+                user_email prfl `shouldBe` Just "mail4chemik@gmail.com"
 
     it "should edit profile" $ do
         r <- runDiscogs testingToken $ editProfile testingUser $ Just [("profile", "updated")]
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just prfl ) -> do
-                User.profile prfl `shouldBe` "updated"
+                user_profile prfl `shouldBe` "updated"
 
     it "should return user submissions" $ do
         r <- runDiscogs testingToken $ submissions testingUser
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just smbs ) -> do
-                S.labels (S.submissions smbs) `shouldBe` Nothing
+                labels (subs_submissions smbs) `shouldBe` Nothing
 
     it "should return user contributions" $ do
         r <- runDiscogs testingToken $ contributions testingUser
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just cntrs ) -> do
-                Cont.contributions cntrs `shouldBe` []
+                contribution_contributions cntrs `shouldBe` []
 
 
     -- COLLECTION SECTION --
@@ -85,37 +77,37 @@ spec = describe "Discogs.Actions.User" $ do
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just collctn ) -> do
-                Prelude.length (Coll.folders collctn ) `shouldBe` 5
+                Prelude.length (folders collctn ) `shouldBe` 5
 
     it "should create a folder" $ do
         r <- runDiscogs testingToken $ createFolder testingUser "specFolder"
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just fldr) -> do
-                Fldr.name fldr `shouldBe` "specFolder"
+                folder_name fldr `shouldBe` "specFolder"
 
     it "should get specific folder" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "specFolder" ) $ Coll.folders cllctn
-        r <- runDiscogs testingToken $ folder testingUser $ Fldr._id fldr
+        let fldr = head $ filter ( \ fld -> folder_name fld == "specFolder" ) $ folders cllctn
+        r <- runDiscogs testingToken $ folder testingUser $ folder_id fldr
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just fld ) -> do
-                Fldr.name fld `shouldBe` "specFolder"
+                folder_name fld `shouldBe` "specFolder"
 
     it "should edit folder metadata" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "specFolder" ) $ Coll.folders cllctn
-        r <- runDiscogs testingToken $ editFolder testingUser (Fldr._id fldr) $ Just [("name", "renamedSpecFolder")]
+        let fldr = head $ filter ( \ fld -> folder_name fld == "specFolder" ) $ folders cllctn
+        r <- runDiscogs testingToken $ editFolder testingUser (folder_id fldr) $ Just [("name", "renamedSpecFolder")]
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just fld ) -> do
-                Fldr.name fld `shouldBe` "renamedSpecFolder"
+                folder_name fld `shouldBe` "renamedSpecFolder"
 
     it "should add release to specified folder" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "renamedSpecFolder" ) $ Coll.folders cllctn
-        r <- runDiscogs testingToken $ addReleaseToFolder testingUser (Fldr._id fldr) testingReleaseId
+        let fldr = head $ filter ( \ fld -> folder_name fld == "renamedSpecFolder" ) $ folders cllctn
+        r <- runDiscogs testingToken $ addReleaseToFolder testingUser (folder_id fldr) testingReleaseId
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right resp -> do
@@ -123,37 +115,37 @@ spec = describe "Discogs.Actions.User" $ do
 
     it "should get collection releases" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "renamedSpecFolder" ) $ Coll.folders cllctn
-        r <- runDiscogs testingToken $ collectionReleases testingUser (Fldr._id fldr) Nothing
+        let fldr = head $ filter ( \ fld -> folder_name fld == "renamedSpecFolder" ) $ folders cllctn
+        r <- runDiscogs testingToken $ collectionReleases testingUser (folder_id fldr) Nothing
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just collRess ) -> do
-                length (R.releases collRess) `shouldBe` 1
+                length (ur_releases collRess) `shouldBe` 1
 
     it "should rate release" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "renamedSpecFolder" ) $ Coll.folders cllctn
-        Right ( Just rlss ) <- runDiscogs testingToken $ collectionReleases testingUser (Fldr._id fldr) Nothing
-        let Just instanceID = R.instance_id . head $ R.releases rlss
-        r <- runDiscogs testingToken $ rateRelease testingUser (Fldr._id fldr) testingReleaseId instanceID $ Just [("rating", "5")]
+        let fldr = head $ filter ( \ fld -> folder_name fld == "renamedSpecFolder" ) $ folders cllctn
+        Right ( Just rlss ) <- runDiscogs testingToken $ collectionReleases testingUser (folder_id fldr) Nothing
+        let Just instanceID = ur_instance_id . head $ ur_releases rlss
+        r <- runDiscogs testingToken $ rateRelease testingUser (folder_id fldr) testingReleaseId instanceID $ Just [("rating", "5")]
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right result -> result `shouldBe` Nothing
 
     it "should delete release from specified folder" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "renamedSpecFolder" ) $ Coll.folders cllctn
-        Right ( Just rlss ) <- runDiscogs testingToken $ collectionReleases testingUser (Fldr._id fldr) Nothing
-        let Just instanceID = R.instance_id . head $ R.releases rlss
-        r <- runDiscogs testingToken $ deleteReleaseFromFolder testingUser (Fldr._id fldr) testingReleaseId instanceID
+        let fldr = head $ filter ( \ fld -> folder_name fld == "renamedSpecFolder" ) $ folders cllctn
+        Right ( Just rlss ) <- runDiscogs testingToken $ collectionReleases testingUser (folder_id fldr) Nothing
+        let Just instanceID = ur_instance_id . head $ ur_releases rlss
+        r <- runDiscogs testingToken $ deleteReleaseFromFolder testingUser (folder_id fldr) testingReleaseId instanceID
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right result -> result `shouldBe` Nothing
 
     it "delete specified folder" $ do
         Right ( Just cllctn ) <- runDiscogs testingToken $ collection testingUser
-        let fldr = head $ filter ( \ fld -> Fldr.name fld == "renamedSpecFolder" ) $ Coll.folders cllctn
-        r <- runDiscogs testingToken $ deleteFolder testingUser (Fldr._id fldr)
+        let fldr = head $ filter ( \ fld -> folder_name fld == "renamedSpecFolder" ) $ folders cllctn
+        r <- runDiscogs testingToken $ deleteFolder testingUser (folder_id fldr)
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right result -> do
@@ -186,8 +178,8 @@ spec = describe "Discogs.Actions.User" $ do
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right ( Just rel ) -> do
-                R.notes rel `shouldBe` (Just "new note")
-                R.rating rel `shouldBe` 3
+                ur_notes rel `shouldBe` (Just "new note")
+                ur_rating rel `shouldBe` 3
 
     it "should remove release from user's wantlist" $ do
         r <- runDiscogs testingToken $ removeFromWantlist testingUser testingReleaseId
