@@ -87,7 +87,7 @@ Example
 runDiscogs token $ newListing 4941528 "Mint (M)" 100 "Draft" Nothing
 
 -- with optional params
-runDiscogs token $ newListing 4941528 "Mint (M)" 100 "Draft" (Just [("location", "unknown")])
+runDiscogs token $ newListing 4941528 "Mint (M)" 100 "Draft" ( Just [("location", "unknown")] )
 
 ```
 
@@ -108,14 +108,18 @@ for testing IO.
 + Richer Error Types
 + Automatic pausing when request limit reached
 + More Examples
-+ Finish Documentation
-+ Types Refactoring : Reduce the amount of types, make types ore generic
-+ Types Refactoring : explicit FromJSON / ToJSON instances to avoid clashes with reserved words
++ Documentation
++ Types Refactoring : Reduce the amount of types, make types more generic
++ Types Refactoring : explicit FromJSON / ToJSON instances to avoid clashes with reserved words and same name fields
++ Types Refactoring : Search -> Release
++ Type class for accessing typical Discogs entity fields (id, resource_url)
++ Type class for paginated responses and types
++ IO tests rely on maintainer's private account -> need to make and setup 2 fake accounts for testing
 
 ### Contributions
 + Fork this repo
 + Create a new branch on your fork
-+ Push commits to yr branch
++ Push commits to your branch
 + Submit new Pull Request
 
 
