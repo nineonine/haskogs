@@ -7,21 +7,85 @@ synopsis:            Discogs.com API wrapper
 -- description:
 license:             MIT
 license-file:        LICENSE
-author:              nineonine
+author:              Alexander Dudarenko
 maintainer:          mail4chemik@gmail.com
+homepage:            https://github.com/nineonine/haskogs
+copyright:           Copyright (c) Alexander Dudarenko, 2015-2016
 -- copyright:
 category:            Web
 build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
 extra-source-files:
-  test/data/release/video_example.json
+  README.md
+
+source-repository head
+  type: git
+  location: https://github.com/nineonine/haskogs
 
 library
-  exposed-modules:     Main
-  -- other-modules:
-  other-extensions:    OverloadedStrings, TemplateHaskell, DeriveGeneric, DeriveAnyClass
-  build-depends:       base >=4.8 && <4.9
+  exposed-modules:
+    Discogs
+    Discogs.Actions
+    Discogs.Actions.Database
+    Discogs.Actions.MarketPlace
+    Discogs.Actions.User
+    Discogs.Types.Discogs
+    Discogs.Types.Alias
+    Discogs.Types.Artist
+    Discogs.Types.Error
+    Discogs.Types.Image
+    Discogs.Types.Label
+    Discogs.Types.Pagination
+    Discogs.Types.Release
+    Discogs.Types.Search
+    Discogs.Types.User
+    Discogs.Types.Artist.Member
+    Discogs.Types.Artist.Release
+    Discogs.Types.Label.Release
+    Discogs.Types.MarketPlace.Item
+    Discogs.Types.MarketPlace.Listing
+    Discogs.Types.MarketPlace.Message
+    Discogs.Types.MarketPlace.Order
+    Discogs.Types.MarketPlace.Price
+    Discogs.Types.MarketPlace.PriceSuggestion
+    Discogs.Types.MarketPlace.Refund
+    Discogs.Types.MarketPlace.Release
+    Discogs.Types.Release.Artist
+    Discogs.Types.Release.Community
+    Discogs.Types.Release.Company
+    Discogs.Types.Release.Contributor
+    Discogs.Types.Release.Format
+    Discogs.Types.Release.Identifier
+    Discogs.Types.Release.Label
+    Discogs.Types.Release.Master
+    Discogs.Types.Release.Rating
+    Discogs.Types.Release.Track
+    Discogs.Types.Release.Versions
+    Discogs.Types.Release.Video
+    Discogs.Types.Search.Result
+    Discogs.Types.User.BasicInfo
+    Discogs.Types.User.Collection
+    Discogs.Types.User.Contribution
+    Discogs.Types.User.Field
+    Discogs.Types.User.Folder
+    Discogs.Types.User.Identity
+    Discogs.Types.User.Release
+    Discogs.Types.User.Submission
+    Discogs.Types.User.Want
+  other-modules:
+    Discogs.Request.Database
+    Discogs.Request.MarketPlace
+    Discogs.Request.User
+
+  default-extensions:
+    OverloadedStrings
+    TemplateHaskell
+    DeriveGeneric
+    GADTs
+    GeneralizedNewtypeDeriving
+    LambdaCase
+  build-depends:       base >=4.8
                        , bytestring >=0.10 && <0.11
                        , http-client >=0.4 && <0.5
                        , http-client-tls >=0.2 && <0.3
