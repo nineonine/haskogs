@@ -48,12 +48,21 @@ handleResponse r = DiscogsT . liftF $ HandleResponse r id
 failWith  :: (Monad m) => DiscogsError -> DiscogsT m a
 failWith e = DiscogsT . liftF $ FailWith e
 
+-- | Run a 'Discogs' action (or a 'DiscogsT' transformer action). This uses the default logged-in settings
+--   for 'DiscogsOptions': rate limiting enabled, default manager, Token authentication metohd, and
+--   the default user-agent. You should change the user agent if you're making anything more complex than
+--   a basic script, since Discogs's API policy says that you should have a uniquely identifiable user agent.
 runDiscogs :: (MonadIO m, FromJSON a) => ByteString -> DiscogsT m a -> m (Either DiscogsError (Maybe a))
 runDiscogs token = runDiscogsWith def { loginMethod = Token token }
 
+-- | Run a 'Discogs' action (or a 'DiscogsT' transformer action). This uses the default logged-out settings, so
+--   you won't be able to do anything that requires authentication.
 runDiscogsAnon :: (MonadIO m, FromJSON a) => DiscogsT m a -> m (Either DiscogsError (Maybe a))
 runDiscogsAnon  = runDiscogsWith def
 
+-- | Run a 'Discogs' or 'DiscogsT' action with custom settings. You probably won't need this function for
+--   most things, but it's handy if you want to persist a connection over multiple 'Discogs' sessions or
+--   use a custom user agent string.
 runDiscogsWith  :: (MonadIO m, FromJSON a) => DiscogsOptions -> DiscogsT m a -> m (Either DiscogsError (Maybe a))
 runDiscogsWith (DiscogsOptions _ man lm ua) discogs = do
     manager <- case man of
@@ -87,6 +96,7 @@ interpretIO state@(DiscogsState url _ mgr headers _ _ ) (DiscogsT r) = runFreeT 
                        Right a -> interpretIO state . DiscogsT $ next a
 
 
+-- | Run a 'Discogs' action (or a 'DiscogsT' transformer action) with optional URL params.
 withParams :: (MonadIO m) => DiscogsT m a -> Params -> DiscogsT m a
 withParams (DiscogsT r) params = DiscogsT $ transFreeT ( `withParams'` params) r
 
@@ -94,6 +104,18 @@ withParams' :: DiscogsF m a -> Params ->  DiscogsF m a
 withParams' (RunRequest r next) params = flip RunRequest next $ setQueryString (mkParams params) r
 withParams' _ _                        = FailWith $ DiscogsError BadParamsUsageError
 
+-- | Options for how we should run the 'Discogs' action.
+--
+-- - 'rateLimitingEnabled': 'True' if the connection should be automatically rate-limited
+--   and should pause when we hit the limit, 'False' otherwise. TODO
+--
+-- - 'connectionManager': @'Just' x@ if the connection should use the 'Manager' @x@, 'Nothing'
+--   if we should create a new one for the connection.
+--
+-- - 'loginMethod': The method we should use for authentication, described in 'Login'.
+--
+-- - 'customUserAgent': @'Just' "string"@ if the connection should use the user agent @"string"@,
+--   @'Nothing'@ if it should use the default agent.
 data DiscogsOptions = DiscogsOptions
     { enableRateLimit   :: Bool
     , connectionManager :: Maybe Manager
