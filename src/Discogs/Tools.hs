@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, LambdaCase #-}
-{-# LANGUAGE DeriveAnyClass, DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ExistentialQuantification #-}
 
 module Discogs.Tools where
@@ -64,4 +64,7 @@ optParams ps = case ps of
                 Just prms -> preparePairs prms
                 _         -> []
 
-data APIMessage = APIMessage { message :: T.Text } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+data APIMessage = APIMessage { message :: T.Text } deriving (Show, Read, Eq, Generic)
+
+instance ToJSON APIMessage
+instance FromJSON APIMessage

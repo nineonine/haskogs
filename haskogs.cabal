@@ -24,12 +24,14 @@ source-repository head
   location: https://github.com/nineonine/haskogs
 
 library
-  exposed-modules:
+  Hs-source-dirs:      src/
+  Exposed-modules:
     Discogs
     Discogs.Actions
     Discogs.Actions.Database
-    Discogs.Actions.MarketPlace
+    Discogs.Actions.Marketplace
     Discogs.Actions.User
+    Discogs.Types
     Discogs.Types.Discogs
     Discogs.Types.Alias
     Discogs.Types.Artist
@@ -43,14 +45,14 @@ library
     Discogs.Types.Artist.Member
     Discogs.Types.Artist.Release
     Discogs.Types.Label.Release
-    Discogs.Types.MarketPlace.Item
-    Discogs.Types.MarketPlace.Listing
-    Discogs.Types.MarketPlace.Message
-    Discogs.Types.MarketPlace.Order
-    Discogs.Types.MarketPlace.Price
-    Discogs.Types.MarketPlace.PriceSuggestion
-    Discogs.Types.MarketPlace.Refund
-    Discogs.Types.MarketPlace.Release
+    Discogs.Types.Marketplace.Item
+    Discogs.Types.Marketplace.Listing
+    Discogs.Types.Marketplace.Message
+    Discogs.Types.Marketplace.Order
+    Discogs.Types.Marketplace.Price
+    Discogs.Types.Marketplace.PriceSuggestion
+    Discogs.Types.Marketplace.Refund
+    Discogs.Types.Marketplace.Release
     Discogs.Types.Release.Artist
     Discogs.Types.Release.Community
     Discogs.Types.Release.Company
@@ -73,11 +75,11 @@ library
     Discogs.Types.User.Release
     Discogs.Types.User.Submission
     Discogs.Types.User.Want
-  other-modules:
+  Other-Modules:
+    Discogs.Request
     Discogs.Request.Database
-    Discogs.Request.MarketPlace
+    Discogs.Request.Marketplace
     Discogs.Request.User
-
   default-extensions:
     OverloadedStrings
     TemplateHaskell
@@ -97,7 +99,6 @@ library
                        , data-default-class >= 0.0.1
                        , transformers >= 0.4
                        , free >= 4
-  hs-source-dirs:      src/
   default-language:    Haskell2010
 
 test-suite test

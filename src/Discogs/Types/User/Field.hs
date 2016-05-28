@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards, DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards, DeriveGeneric #-}
 
 module Discogs.Types.User.Field where
 
@@ -6,7 +6,10 @@ import Data.Text hiding (count)
 import Data.Aeson
 import GHC.Generics
 
-data Fields = Fields { fields :: [Field] } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+data Fields = Fields { fields :: [Field] } deriving (Show, Read, Eq, Generic)
+
+instance ToJSON Fields
+instance FromJSON Fields
 
 data Field = Field
     { field_lines   :: Maybe Int

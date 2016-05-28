@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
-module Discogs.Types.MarketPlace.Release where
+module Discogs.Types.Marketplace.Release where
 
 import Data.Text
 import Data.Aeson

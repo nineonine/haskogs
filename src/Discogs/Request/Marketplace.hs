@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Discogs.Request.MarketPlace where
+module Discogs.Request.Marketplace where
 
 import Discogs.Tools
 

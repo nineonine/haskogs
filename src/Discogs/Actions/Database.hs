@@ -11,7 +11,7 @@ import Discogs.Types.Label
 import Discogs.Types.Search
 import qualified Discogs.Types.Artist.Release as AR
 import qualified Discogs.Types.Label.Release as LR
-import qualified Discogs.Request.Database as Req
+import qualified Discogs.Request as Req
 
 -- | Get a 'Release'
 --   <https://www.discogs.com/developers/#page:database,header:database-release>

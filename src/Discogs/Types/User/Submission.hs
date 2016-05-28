@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
 module Discogs.Types.User.Submission where
@@ -15,7 +15,10 @@ data Submission = Submission
     { labels   :: Maybe [Label]
     , releases :: Maybe [Release]
     , artists  :: Maybe [Artist]
-    } deriving (Show, Read, Eq, Generic, FromJSON, ToJSON)
+    } deriving (Show, Read, Eq, Generic)
+
+instance ToJSON Submission
+instance FromJSON Submission
 
 data Submissions = Submissions
     { subs_pagination  :: Maybe Pagination

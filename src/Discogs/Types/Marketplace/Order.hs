@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Discogs.Types.MarketPlace.Order where
+module Discogs.Types.Marketplace.Order where
 
 import           Discogs.Types.Alias
 import           Discogs.Types.Pagination
-import           Discogs.Types.MarketPlace.Item
-import           Discogs.Types.MarketPlace.Price
+import           Discogs.Types.Marketplace.Item
+import           Discogs.Types.Marketplace.Price
 
 import           Data.Aeson
 import           Data.Text

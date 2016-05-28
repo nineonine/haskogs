@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Discogs.Types.MarketPlace.Refund where
+module Discogs.Types.Marketplace.Refund where
 
 import           Data.Text
 import           Data.Aeson

@@ -18,7 +18,7 @@ import Discogs.Types.User.Release
 import Discogs.Types.User.Field
 import Discogs.Types.User.Want
 import qualified Discogs.Types.User as User
-import qualified Discogs.Request.User as Req
+import qualified Discogs.Request as Req
 
 
 -- IDENTITY SECTION --

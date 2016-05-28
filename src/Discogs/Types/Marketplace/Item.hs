@@ -1,9 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Discogs.Types.MarketPlace.Item where
+module Discogs.Types.Marketplace.Item where
 
-import Discogs.Types.MarketPlace.Price
+import Discogs.Types.Marketplace.Price
 
 import           Data.Aeson
 import           Data.Text
