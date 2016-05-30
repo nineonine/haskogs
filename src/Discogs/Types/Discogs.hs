@@ -10,6 +10,7 @@ import Discogs.Types.Error
 
 import Data.Maybe
 import Data.Aeson
+import Control.Applicative
 import Control.Exception
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Free

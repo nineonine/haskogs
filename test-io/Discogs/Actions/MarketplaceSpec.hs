@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Discogs.Actions.MarketPlaceSpec where
+module Discogs.Actions.MarketplaceSpec where
 
 import Discogs.Types
 import Discogs.Types.Discogs
 
-import Discogs.Actions.MarketPlace
+import Discogs.Actions.Marketplace
 
 import Discogs.Tools
 
