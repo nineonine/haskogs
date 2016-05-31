@@ -1,4 +1,4 @@
-Haskogs
+Haskogs [![Build Status](https://travis-ci.org/nineonine/haskogs.svg?branch=master)](https://travis-ci.org/nineonine/haskogs)
 ---
 
 A Haskell Library for interacting with [Discogs API](https://www.discogs.com/developers/).
