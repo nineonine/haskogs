@@ -106,7 +106,9 @@ library
 test-suite test
   hs-source-dirs: src, test
   main-is: Spec.hs
-  default-extensions: OverloadedStrings
+  default-extensions:
+    OverloadedStrings
+    TypeFamilies
   default-language: Haskell2010
   type: exitcode-stdio-1.0
   build-depends:
@@ -117,13 +119,17 @@ test-suite test
     haskogs,
     hspec,
     text,
-    time
+    time,
+    http-client,
+    data-default-class
   ghc-options: -Wall
 
 test-suite test-io
   hs-source-dirs: src, test-io
   main-is: Spec.hs
-  default-extensions: OverloadedStrings
+  default-extensions:
+    OverloadedStrings
+    TypeFamilies
   default-language: Haskell2010
   type: exitcode-stdio-1.0
   build-depends:
