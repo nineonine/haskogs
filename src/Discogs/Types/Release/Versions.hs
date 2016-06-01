@@ -3,6 +3,7 @@
 
 module Discogs.Types.Release.Versions where
 
+import           Discogs.Tools
 import           Discogs.Types.Pagination
 
 import           Data.Aeson
@@ -21,6 +22,11 @@ data ReleaseVersion = ReleaseVersion
     , rv_resource_url :: Text
     , rv_id           :: Int
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource ReleaseVersion where
+    type ID ReleaseVersion = Int
+    resourceId = rv_id
+    resourceUrl = rv_resource_url
 
 instance FromJSON ReleaseVersion where
     parseJSON = withObject "release" $ \o -> do

@@ -6,6 +6,7 @@ module Discogs.Types.Search.Result where
 import           Control.Applicative
 import           Data.Aeson          hiding (Result)
 import           Data.Text
+import           Discogs.Tools
 
 data Result = Result
     { result_thumb        :: Text
@@ -24,6 +25,11 @@ data Result = Result
     , result_type         :: Text
     , result_id           :: Int
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Result where
+    type ID Result = Int
+    resourceId = result_id
+    resourceUrl = result_resource_url
 
 instance FromJSON Result where
     parseJSON = withObject "result" $ \o -> do

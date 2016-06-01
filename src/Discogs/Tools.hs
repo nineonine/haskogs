@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings, LambdaCase #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Discogs.Tools where
 
@@ -17,19 +18,19 @@ import Data.Default.Class
 import Data.ByteString hiding (dropWhile, map)
 import qualified Data.ByteString.Char8 as C
 
-fromRightMaybe :: Either b (Maybe a) -> a
-fromRightMaybe (Right (Just smth) ) = smth
-
-toBS :: T.Text -> ByteString
-toBS = encodeUtf8
-
-intToBs :: Int -> ByteString
-intToBs = C.pack . show
-
 type Params = [(T.Text, T.Text)]
-
 data OptionalParams = forall a. (Show a, ToJSON a) => OP T.Text a
+data APIMessage = APIMessage { message :: T.Text } deriving (Show, Read, Eq, Generic)
+instance ToJSON APIMessage
+instance FromJSON APIMessage
 
+class DiscogsResource resource where
+    type ID resource
+    resourceId :: resource -> ID resource
+    resourceUrl :: resource -> T.Text
+
+
+-- functions for preparing optional URL parameters --
 toOptionalParams :: Params -> [OptionalParams]
 toOptionalParams = map toPS
                    where
@@ -45,26 +46,36 @@ toKeyValues = map ( \(OP a b) -> a .= b )
 preparePairs :: Params -> [Pair]
 preparePairs = toKeyValues . toOptionalParams
 
--- for setQueryString
+-- for setQueryString --
 mkParams :: Params -> [(ByteString, Maybe ByteString)]
 mkParams = map $ \(a,b) -> (,) (encodeUtf8 a) (Just . encodeUtf8 $ b ) -- T.replace " " "%20"
-
-
-toText :: (Show a) => a -> T.Text
-toText s = if Prelude.all isDigit (show s)
-             then T.pack (show s)
-             else T.pack (read $ show s) :: T.Text
-
-secureReq :: Request
-secureReq = def { secure = True
-                , port = 443 }
 
 optParams :: Maybe Params -> [Pair]
 optParams ps = case ps of
                 Just prms -> preparePairs prms
                 _         -> []
+--------------------------------------------------------
 
-data APIMessage = APIMessage { message :: T.Text } deriving (Show, Read, Eq, Generic)
+-- Stringy Types conversions --
+toText :: (Show a) => a -> T.Text
+toText s = if Prelude.all isDigit (show s)
+             then T.pack (show s)
+             else T.pack (read $ show s) :: T.Text
 
-instance ToJSON APIMessage
-instance FromJSON APIMessage
+toBS :: T.Text -> ByteString
+toBS = encodeUtf8
+
+intToBs :: Int -> ByteString
+intToBs = C.pack . show
+----------------------------
+
+-- for request template with port 443 --
+secureReq :: Request
+secureReq = def { secure = True
+                , port = 443 }
+--------------------------------------
+
+-- Useful function for unwraping standard DiscogsT result value --
+fromRightMaybe :: Either b (Maybe a) -> a
+fromRightMaybe (Right (Just smth) ) = smth
+------------------------------------------------------------------

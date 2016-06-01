@@ -3,6 +3,7 @@
 
 module Discogs.Types.Release where
 
+import           Discogs.Tools
 import           Discogs.Types.Image
 import           Discogs.Types.Release.Artist
 import           Discogs.Types.Release.Community
@@ -50,6 +51,11 @@ data Release = Release
     , release_resource_url       :: Text
     , release_data_quality       :: Text
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Release where
+    type ID Release = Int
+    resourceId = release_id
+    resourceUrl = release_resource_url
 
 instance FromJSON Release where
     parseJSON = withObject "release" $ \o -> do

@@ -74,6 +74,43 @@ main = do
 
 ```
 
+### Useful accessors
+
+A lot of Discogs entities have same field names. Because it was not allowed (GHC version < 8) to have multiple data types with same field names, every Type that describes Discogs response JSON object has unique name field names ( refactoring this using [`OverloadedRecordFields`](https://ghc.haskell.org/trac/ghc/wiki/Records/OverloadedRecordFields) is on the TODO list ).
+
+However, we have a useful typeclass for accesing common Discogs fields which are `id` and `resource_url` .
+
+```haskell
+class DiscogsResource resource where
+    type ID resource
+    resourceId :: resource -> ID resource
+    resourceUrl :: resource -> T.Text
+
+```
+
+All necessary Types implement this TC. We are using `TypeFamilies` extension here because there some instances with `id` field may also include non numeric characters ( e.g. Order ).
+
+Now we have handy generic accessor functions.
+
+```haskell  
+{-# LANGUAGE OverloadedStrings #-}
+import Discogs
+import Discogs.Types ( Release, Artist )
+
+token :: ByteString
+token = "yourGeneratedToken"
+
+program :: DiscogsT IO ()
+program = do
+    r <- release 1
+    liftIO . print $ resourceId r -- prints 1
+    a <- artist 1
+    liftIO . print $ resourceUrl a -- prints "https://api.discogs.com/artists/1"
+    return ()
+
+```
+
+
 ### Optional Parameters
 
 Some endpoints accept optional parameters.

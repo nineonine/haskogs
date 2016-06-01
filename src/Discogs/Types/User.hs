@@ -2,6 +2,7 @@
 
 module Discogs.Types.User where
 
+import Discogs.Tools
 import Data.Text
 import Data.Time.Clock
 import Data.Aeson hiding (Result)
@@ -30,6 +31,11 @@ data User = User
     , user_avatar_url            :: Text
     , user_resource_url     :: Text
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource User where
+    type ID User = Int
+    resourceId = user_id
+    resourceUrl = user_resource_url
 
 instance FromJSON User where
     parseJSON = withObject "user" $ \o -> do

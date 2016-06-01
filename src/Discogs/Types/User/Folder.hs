@@ -4,6 +4,7 @@ module Discogs.Types.User.Folder where
 
 import Data.Text hiding (count)
 import Data.Aeson
+import Discogs.Tools
 
 data Folder = Folder
     { folder_count        :: Int
@@ -11,6 +12,11 @@ data Folder = Folder
     , folder_name         :: Text
     , folder_id           :: Int
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Folder where
+    type ID Folder = Int
+    resourceId = folder_id
+    resourceUrl = folder_resource_url
 
 instance FromJSON Folder where
     parseJSON = withObject "folder" $ \o -> do

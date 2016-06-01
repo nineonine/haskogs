@@ -4,6 +4,7 @@ module Discogs.Types.Release.Artist where
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data ReleaseArtist = ReleaseArtist
      { ra_join         :: Text
@@ -14,6 +15,11 @@ data ReleaseArtist = ReleaseArtist
      , ra_resource_url :: Text
      , ra_id           :: Int
      } deriving (Show, Read, Eq)
+
+instance DiscogsResource ReleaseArtist where
+    type ID ReleaseArtist = Int
+    resourceId = ra_id
+    resourceUrl = ra_resource_url
 
 instance FromJSON ReleaseArtist where
     parseJSON = withObject "artist" $ \o -> do

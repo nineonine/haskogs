@@ -3,6 +3,7 @@
 
 module Discogs.Types.Marketplace.Order where
 
+import           Discogs.Tools
 import           Discogs.Types.Alias
 import           Discogs.Types.Pagination
 import           Discogs.Types.Marketplace.Item
@@ -46,6 +47,11 @@ data Order = Order
     , order_buyer                   :: Alias
     , order_total                   :: Price
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Order where
+    type ID Order = Text
+    resourceId = order_id
+    resourceUrl = order_resource_url
 
 instance FromJSON Order where
     parseJSON = withObject "order" $ \o -> do

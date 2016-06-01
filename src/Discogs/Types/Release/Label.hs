@@ -4,6 +4,7 @@ module Discogs.Types.Release.Label where
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data ReleaseLabel = ReleaseLabel
         { rl_id           :: Int
@@ -12,6 +13,11 @@ data ReleaseLabel = ReleaseLabel
         , rl_catno        :: Text
         , rl_name         :: Text
         } deriving (Show, Read, Eq)
+
+instance DiscogsResource ReleaseLabel where
+    type ID ReleaseLabel = Int
+    resourceId = rl_id
+    resourceUrl = rl_resource_url
 
 instance FromJSON ReleaseLabel where
     parseJSON = withObject "label" $ \o -> do

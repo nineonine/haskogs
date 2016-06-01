@@ -2,6 +2,7 @@
 
 module Discogs.Types.User.Want where
 
+import Discogs.Tools
 import Discogs.Types.Pagination
 import Discogs.Types.User.BasicInfo
 
@@ -32,6 +33,11 @@ data Want = Want
     , want_id                :: Int
     , want_date_added        :: UTCTime
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Want where
+    type ID Want = Int
+    resourceId = want_id
+    resourceUrl = want_resource_url
 
 instance FromJSON Want where
     parseJSON = withObject "want" $ \o -> do

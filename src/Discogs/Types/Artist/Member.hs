@@ -5,13 +5,19 @@ module Discogs.Types.Artist.Member where
 
 import           Data.Aeson
 import           Data.Text
+import           Discogs.Tools
 
 data Member = Member
-    { member_active              :: Bool
+    { member_active       :: Bool
     , member_resource_url :: Text
     , member_id           :: Int
     , member_name         :: Text
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Member where
+    type ID Member = Int
+    resourceId = member_id
+    resourceUrl = member_resource_url
 
 instance FromJSON Member where
     parseJSON = withObject "member" $ \o -> do

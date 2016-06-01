@@ -4,6 +4,7 @@ module Discogs.Types.User.Identity where
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data Identity = Identity
     { id_resource_url  :: Text
@@ -11,6 +12,11 @@ data Identity = Identity
     , id_username      :: Text
     , id_consumer_name :: Text
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Identity where
+    type ID Identity = Int
+    resourceId = id_id
+    resourceUrl = id_resource_url
 
 instance FromJSON Identity where
     parseJSON = withObject "identity" $ \o -> do

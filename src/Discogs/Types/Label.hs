@@ -3,6 +3,7 @@
 
 module Discogs.Types.Label where
 
+import           Discogs.Tools
 import qualified Discogs.Types.Alias as A
 import qualified Discogs.Types.Image as I
 
@@ -24,6 +25,11 @@ data Label = Label
     , label_data_quality :: Text
     , label_resource_url :: Text
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Label where
+    type ID Label = Int
+    resourceId = label_id
+    resourceUrl = label_resource_url
 
 instance FromJSON Label where
     parseJSON = withObject "label" $ \o -> do

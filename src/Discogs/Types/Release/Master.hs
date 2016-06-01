@@ -9,6 +9,7 @@ import Discogs.Types.Image
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data Master = Master
       { master_styles             :: [Text]
@@ -27,6 +28,11 @@ data Master = Master
       , master_uri                :: Text
       , master_data_quality       :: Text
       } deriving (Show, Read, Eq)
+
+instance DiscogsResource Master where
+    type ID Master = Int
+    resourceId = master_id
+    resourceUrl = master_resource_url
 
 instance FromJSON Master where
     parseJSON = withObject "master" $ \o -> do

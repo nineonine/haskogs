@@ -6,6 +6,7 @@ import Discogs.Types.Pagination
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data LabelRelease = LabelRelease
     { lr_status       :: Text
@@ -18,6 +19,11 @@ data LabelRelease = LabelRelease
     , lr_artist       :: Text
     , lr_id           :: Int
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource LabelRelease where
+    type ID LabelRelease = Int
+    resourceId = lr_id
+    resourceUrl = lr_resource_url
 
 instance FromJSON LabelRelease where
     parseJSON = withObject "release" $ \o -> do

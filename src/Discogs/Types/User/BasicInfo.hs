@@ -8,6 +8,7 @@ import Discogs.Types.Release.Artist
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data BasicInfo = BasicInfo
     { bi_labels       :: [ReleaseLabel]
@@ -19,6 +20,11 @@ data BasicInfo = BasicInfo
     , bi_year         :: Int
     , bi_id           :: Int
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource BasicInfo where
+    type ID BasicInfo = Int
+    resourceId = bi_id
+    resourceUrl = bi_resource_url
 
 instance FromJSON BasicInfo where
     parseJSON = withObject "basic_information" $ \o -> do

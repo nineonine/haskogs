@@ -3,6 +3,7 @@
 
 module Discogs.Types.Artist where
 
+import           Discogs.Tools
 import           Discogs.Types.Alias
 import           Discogs.Types.Artist.Member
 import           Discogs.Types.Image
@@ -27,6 +28,11 @@ data Artist = Artist
     , artist_data_quality   :: Text
     , artist_namevariations :: Maybe [Text]
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Artist where
+    type ID Artist = Int
+    resourceId = artist_id
+    resourceUrl = artist_resource_url
 
 instance FromJSON Artist where
     parseJSON = withObject "artist" $ \o -> do

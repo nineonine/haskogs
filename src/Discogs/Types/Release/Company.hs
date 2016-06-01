@@ -5,6 +5,7 @@ module Discogs.Types.Release.Company where
 
 import           Data.Aeson
 import           Data.Text
+import           Discogs.Tools
 
 data Company = Company
     { company_name             :: Text
@@ -14,6 +15,11 @@ data Company = Company
     , company_id               :: Int
     , company_entity_type_name :: Text
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource Company where
+    type ID Company = Int
+    resourceId = company_id
+    resourceUrl = company_resource_url
 
 instance FromJSON Company where
     parseJSON = withObject "company" $ \o -> do

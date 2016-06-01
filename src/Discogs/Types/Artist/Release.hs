@@ -6,6 +6,7 @@ import Discogs.Types.Pagination
 
 import Data.Text
 import Data.Aeson
+import Discogs.Tools
 
 data ArtistRelease = ArtistRelease
     { ar_thumb        :: Text
@@ -18,6 +19,11 @@ data ArtistRelease = ArtistRelease
     , ar_release_type :: Maybe Text
     , ar_id           :: Int
     } deriving (Show, Read, Eq)
+
+instance DiscogsResource ArtistRelease where
+    type ID ArtistRelease = Int
+    resourceId = ar_id
+    resourceUrl = ar_resource_url
 
 instance FromJSON ArtistRelease where
     parseJSON = withObject "artist" $ \o -> do
