@@ -3,6 +3,7 @@
 
 module Discogs.Types.User.Contribution where
 
+import Discogs.Tools
 import Discogs.Types.Pagination
 import Discogs.Types.Release
 
@@ -12,6 +13,11 @@ data Contributions = Contributions {
       contribution_pagination    :: Maybe Pagination
     , contribution_contributions :: [Release]
 } deriving (Show, Read, Eq)
+
+instance Paginated Contributions where
+    type Content Contributions = [Release]
+    pagination = contribution_pagination
+    contents = contribution_contributions
 
 instance FromJSON Contributions where
     parseJSON = withObject "searchResult" $ \o -> do

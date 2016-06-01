@@ -109,12 +109,43 @@ program = do
     return ()
 
 ```
+### Pagination
 
+You can pass pagination related URL parameters using special function from `Discogs.Types.Discogs`
+```haskell  
+withParams :: (MonadIO m) => DiscogsT m a -> Params -> DiscogsT m a
+
+```
+
+Some responses consist of pagination object, as well as rest of the content. For convenient access we have `Paginated` class, which gives us generic functions for accessing either `Pagination` object or rest of the JSON object found in response.
+```haskell  
+class Paginated resource where
+    type Content resource
+    pagination :: resource -> Maybe Pagination
+    contents :: resource -> Content resource
+
+```
+
+Example
+```haskell  
+{-# LANGUAGE OverloadedStrings #-}
+import Discogs
+import Discogs.Types ( SearchResult, Pagination, Result )
+
+program :: DiscogsT IO ()
+program = do
+    let searchExample = search [("artist", "nirvana")]
+    sr <- searchExample `withParams` [("page" , "50")] -- ( sr :: SearchResult )
+    liftIO . print $ pagination sr -- prints pagination object
+    liftIO . print $ contents sr -- prints contents ( 50th page of search result )
+    return ()
+
+```
 
 ### Optional Parameters
 
 Some endpoints accept optional parameters.
-You can pass them using special type Params.
+You can pass them using special type `Params`.
 It is wrapped in existential type, so you just have to pass `Text` and `Params` will take care of conversion.
 
 Example
@@ -152,6 +183,7 @@ for testing IO.
 + Type class for accessing typical Discogs entity fields (id, resource_url)
 + Type class for paginated responses and types
 + IO tests rely on maintainer's private account -> need to make and setup 2 fake accounts for testing
++ Switch entirely to using `withParams` function for handling optional URL parameters
 
 ### Contributions
 + Fork this repo

@@ -2,6 +2,7 @@
 
 module Discogs.Types.Marketplace.Listing where
 
+import Discogs.Tools
 import Discogs.Types.Alias
 import Discogs.Types.Pagination
 import Discogs.Types.Marketplace.Price
@@ -15,6 +16,11 @@ data Inventory = Inventory
     { inv_pagination :: Maybe Pagination
     , inv_listings   :: [Listing]
     } deriving (Show, Read, Eq)
+
+instance Paginated Inventory where
+    type Content Inventory = [Listing]
+    pagination = inv_pagination
+    contents = inv_listings
 
 instance FromJSON Inventory where
     parseJSON = withObject "searchResult" $ \o -> do

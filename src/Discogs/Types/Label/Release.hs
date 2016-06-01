@@ -56,6 +56,11 @@ data LabelReleases = LabelReleases
     , lr_releases   :: [LabelRelease]
     } deriving (Show, Read, Eq)
 
+instance Paginated LabelReleases where
+    type Content LabelReleases = [LabelRelease]
+    pagination = lr_pagination
+    contents = lr_releases
+
 instance FromJSON LabelReleases where
     parseJSON = withObject "LabelReleases" $ \o -> do
         lr_pagination <- o.:? "pagination"

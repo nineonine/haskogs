@@ -2,6 +2,7 @@
 
 module Discogs.Types.User.Release where
 
+import Discogs.Tools
 import Discogs.Types.Pagination
 import Discogs.Types.User.BasicInfo
 
@@ -13,6 +14,11 @@ data UserReleases  = UserReleases
     { ur_pagination :: Maybe Pagination
     , ur_releases   :: [UserRelease]
     } deriving (Read, Show, Eq)
+
+instance Paginated UserReleases where
+    type Content UserReleases = [UserRelease]
+    pagination = ur_pagination
+    contents = ur_releases
 
 instance FromJSON UserReleases where
     parseJSON = withObject "searchResult" $ \o -> do

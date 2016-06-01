@@ -15,6 +15,11 @@ data Wants = Wants
     , wants_wants      :: [Want]
     } deriving (Show, Read, Eq)
 
+instance Paginated Wants where
+    type Content Wants = [Want]
+    pagination = wants_pagination
+    contents = wants_wants
+
 instance FromJSON Wants where
     parseJSON = withObject "searchResult" $ \o -> do
         wants_pagination <- o.:? "pagination"

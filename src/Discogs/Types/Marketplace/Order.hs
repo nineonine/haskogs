@@ -18,6 +18,11 @@ data Orders = Orders
     , orders_orders     :: [Order]
     } deriving (Read, Show, Eq)
 
+instance Paginated Orders where
+    type Content Orders = [Order]
+    pagination = orders_pagination
+    contents = orders_orders
+
 instance FromJSON Orders where
     parseJSON = withObject "searchResult" $ \o -> do
         orders_pagination <- o.:? "pagination"

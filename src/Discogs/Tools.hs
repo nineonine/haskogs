@@ -5,6 +5,8 @@
 
 module Discogs.Tools where
 
+import Discogs.Types.Pagination
+
 import Data.Char
 import GHC.Generics
 import Data.Aeson
@@ -29,6 +31,10 @@ class DiscogsResource resource where
     resourceId :: resource -> ID resource
     resourceUrl :: resource -> T.Text
 
+class Paginated resource where
+    type Content resource
+    pagination :: resource -> Maybe Pagination
+    contents :: resource -> Content resource
 
 -- functions for preparing optional URL parameters --
 toOptionalParams :: Params -> [OptionalParams]

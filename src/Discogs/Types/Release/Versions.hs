@@ -58,6 +58,11 @@ data Versions = Versions
     , versions_versions   :: [ReleaseVersion]
     } deriving (Show, Read, Eq)
 
+instance Paginated Versions where
+    type Content Versions = [ReleaseVersion]
+    pagination = versions_pagination
+    contents = versions_versions
+
 instance FromJSON Versions where
     parseJSON = withObject "searchResult" $ \o -> do
         versions_pagination <- o.:? "pagination"

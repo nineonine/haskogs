@@ -6,7 +6,7 @@ import Data.Text hiding (count)
 import Data.Aeson
 import GHC.Generics
 
-data Fields = Fields { fields :: [Field] } deriving (Show, Read, Eq, Generic)
+newtype Fields = Fields { fields :: [Field] } deriving (Show, Read, Eq, Generic)
 
 instance ToJSON Fields
 instance FromJSON Fields

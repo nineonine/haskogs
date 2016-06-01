@@ -55,6 +55,11 @@ data ArtistReleases = ArtistReleases
     , ar_releases   :: [ArtistRelease]
     } deriving (Show, Read, Eq)
 
+instance Paginated ArtistReleases where
+    type Content ArtistReleases = [ArtistRelease]
+    pagination = ar_pagination
+    contents = ar_releases
+
 instance FromJSON ArtistReleases where
     parseJSON = withObject "searchResult" $ \o -> do
         ar_pagination <- o.:? "pagination"

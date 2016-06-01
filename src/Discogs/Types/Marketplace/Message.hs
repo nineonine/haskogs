@@ -3,6 +3,7 @@
 
 module Discogs.Types.Marketplace.Message where
 
+import           Discogs.Tools
 import           Discogs.Types.Alias
 import           Discogs.Types.Pagination
 import           Discogs.Types.Marketplace.Refund
@@ -15,6 +16,11 @@ data Messages = Messages
     { msgs_pagination :: Maybe Pagination
     , msgs_messages   :: [Message]
     } deriving (Show, Read, Eq)
+
+instance Paginated Messages where
+    type Content Messages = [Message]
+    pagination = msgs_pagination
+    contents = msgs_messages
 
 instance FromJSON Messages where
     parseJSON = withObject "searchResult" $ \o -> do
