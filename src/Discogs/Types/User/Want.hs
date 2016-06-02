@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.User.Want where
 
 import Discogs.Tools
@@ -17,19 +15,19 @@ data Wants = Wants
 
 instance Paginated Wants where
     type Content Wants = [Want]
-    pagination = wants_pagination
-    contents = wants_wants
+    pagination         = wants_pagination
+    contents           = wants_wants
 
 instance FromJSON Wants where
     parseJSON = withObject "searchResult" $ \o -> do
         wants_pagination <- o.:? "pagination"
-        wants_wants   <- o .: "wants"
+        wants_wants      <- o .: "wants"
         return Wants{..}
 
 instance ToJSON Wants where
     toJSON Wants{..} = object [
         "pagination" .= wants_pagination ,
-        "wants"   .= wants_wants ]
+        "wants"      .= wants_wants ]
 
 data Want = Want
     { want_rating            :: Int
@@ -41,8 +39,8 @@ data Want = Want
 
 instance DiscogsResource Want where
     type ID Want = Int
-    resourceId = want_id
-    resourceUrl = want_resource_url
+    resourceId   = want_id
+    resourceUrl  = want_resource_url
 
 instance FromJSON Want where
     parseJSON = withObject "want" $ \o -> do

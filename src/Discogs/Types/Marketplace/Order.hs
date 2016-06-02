@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Marketplace.Order where
 
 import           Discogs.Tools
@@ -20,13 +17,13 @@ data Orders = Orders
 
 instance Paginated Orders where
     type Content Orders = [Order]
-    pagination = orders_pagination
-    contents = orders_orders
+    pagination          = orders_pagination
+    contents            = orders_orders
 
 instance FromJSON Orders where
     parseJSON = withObject "searchResult" $ \o -> do
         orders_pagination <- o.:? "pagination"
-        orders_orders   <- o .: "orders"
+        orders_orders     <- o .: "orders"
         return Orders{..}
 
 instance ToJSON Orders where
@@ -35,7 +32,7 @@ instance ToJSON Orders where
         "orders"     .= orders_orders ]
 
 data Order = Order
-    { order_id                     :: Text
+    { order_id                      :: Text
     , order_resource_url            :: Text
     , order_messages_url            :: Text
     , order_uri                     :: Text

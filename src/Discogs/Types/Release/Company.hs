@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Release.Company where
 
 import           Data.Aeson
@@ -18,8 +15,8 @@ data Company = Company
 
 instance DiscogsResource Company where
     type ID Company = Int
-    resourceId = company_id
-    resourceUrl = company_resource_url
+    resourceId      = company_id
+    resourceUrl     = company_resource_url
 
 instance FromJSON Company where
     parseJSON = withObject "company" $ \o -> do

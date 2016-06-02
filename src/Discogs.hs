@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, LambdaCase #-}
-
 module Discogs
   ( -- * Re-exports
     module Discogs.Actions

@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Marketplace.Release where
 
 import Data.Text
@@ -7,7 +5,7 @@ import Data.Aeson
 import Discogs.Tools
 
 data ListingRelease = ListingRelease
-    { listr_catalog_number    :: Text
+    { listr_catalog_number :: Text
     , listr_resource_url   :: Text
     , listr_year           :: Int
     , listr_id             :: Int
@@ -16,15 +14,15 @@ data ListingRelease = ListingRelease
 
 instance DiscogsResource ListingRelease where
     type ID ListingRelease = Int
-    resourceId = listr_id
-    resourceUrl = listr_resource_url
+    resourceId             = listr_id
+    resourceUrl            = listr_resource_url
 
 instance FromJSON ListingRelease where
     parseJSON = withObject "release" $ \o -> do
         listr_catalog_number <- o .: "catalog_number"
         listr_resource_url   <- o .: "resource_url"
         listr_year           <- o .: "year"
-        listr_id            <- o .: "id"
+        listr_id             <- o .: "id"
         listr_description    <- o .: "description"
         return ListingRelease{..}
 

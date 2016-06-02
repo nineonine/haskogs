@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Artist where
 
 import           Discogs.Tools
@@ -31,8 +28,8 @@ data Artist = Artist
 
 instance DiscogsResource Artist where
     type ID Artist = Int
-    resourceId = artist_id
-    resourceUrl = artist_resource_url
+    resourceId     = artist_id
+    resourceUrl    = artist_resource_url
 
 instance FromJSON Artist where
     parseJSON = withObject "artist" $ \o -> do

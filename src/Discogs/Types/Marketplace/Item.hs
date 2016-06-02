@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Marketplace.Item where
 
 import Discogs.Types.Marketplace.Price
@@ -16,7 +13,7 @@ data ItemRelease = ItemRelease
 data Item = Item
     { item_release :: ItemRelease
     , item_price   :: Price
-    , item_id     :: Int
+    , item_id      :: Int
     } deriving (Show, Read, Eq)
 
 instance FromJSON ItemRelease where
@@ -32,7 +29,7 @@ instance ToJSON ItemRelease where
 
 instance FromJSON Item where
     parseJSON = withObject "item" $ \o -> do
-        item_id     <- o .: "id"
+        item_id      <- o .: "id"
         item_price   <- o .: "price"
         item_release <- o .: "release"
         return Item{..}

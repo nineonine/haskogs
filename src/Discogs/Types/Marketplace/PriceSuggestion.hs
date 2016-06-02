@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Marketplace.PriceSuggestion where
 
 import           Discogs.Types.Marketplace.Price

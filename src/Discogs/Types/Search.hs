@@ -1,5 +1,3 @@
-{-# LANGUAGE RecordWildCards, OverloadedStrings#-}
-
 module Discogs.Types.Search where
 
 import Discogs.Tools
@@ -10,13 +8,13 @@ import Data.Aeson hiding (Result)
 
 data SearchResult = SearchResult
     { sr_pagination :: Pagination
-    , sr_results   :: [Result]
+    , sr_results    :: [Result]
     } deriving (Show, Read, Eq)
 
 instance Paginated SearchResult where
     type Content SearchResult = [Result]
-    pagination = Just . sr_pagination
-    contents = sr_results
+    pagination                = Just . sr_pagination
+    contents                  = sr_results
 
 instance FromJSON SearchResult where
     parseJSON = withObject "searchResult" $ \o -> do

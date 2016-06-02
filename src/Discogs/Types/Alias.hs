@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Alias where
 
 import           Control.Applicative
@@ -17,8 +14,8 @@ data Alias = Alias
 
 instance DiscogsResource Alias where
     type ID Alias = Int
-    resourceId = fromJust . alias_id
-    resourceUrl = alias_resource_url
+    resourceId    = fromJust . alias_id
+    resourceUrl   = alias_resource_url
 
 instance FromJSON Alias where
     parseJSON = withObject "alias" $ \o -> do

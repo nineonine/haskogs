@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Label.Release where
 
 import Discogs.Types.Pagination
@@ -22,33 +20,33 @@ data LabelRelease = LabelRelease
 
 instance DiscogsResource LabelRelease where
     type ID LabelRelease = Int
-    resourceId = lr_id
-    resourceUrl = lr_resource_url
+    resourceId           = lr_id
+    resourceUrl          = lr_resource_url
 
 instance FromJSON LabelRelease where
     parseJSON = withObject "release" $ \o -> do
-        lr_status <- o .: "status"
-        lr_thumb <- o .: "thumb"
-        lr_title <- o .: "title"
-        lr_format <- o .: "format"
-        lr_catno <- o .: "catno"
-        lr_year <- o .:? "year"
+        lr_status       <- o .: "status"
+        lr_thumb        <- o .: "thumb"
+        lr_title        <- o .: "title"
+        lr_format       <- o .: "format"
+        lr_catno        <- o .: "catno"
+        lr_year         <- o .:? "year"
         lr_resource_url <- o .: "resource_url"
-        lr_artist <- o .: "artist"
-        lr_id <- o .: "id"
+        lr_artist       <- o .: "artist"
+        lr_id           <- o .: "id"
         return LabelRelease{..}
 
 instance ToJSON LabelRelease where
     toJSON LabelRelease{..} = object [
-        "status" .= lr_status,
-        "thumb" .= lr_thumb,
-        "title" .= lr_title,
-        "format" .= lr_format,
-        "catno" .= lr_catno,
-        "year" .= lr_year,
+        "status"       .= lr_status,
+        "thumb"        .= lr_thumb,
+        "title"        .= lr_title,
+        "format"       .= lr_format,
+        "catno"        .= lr_catno,
+        "year"         .= lr_year,
         "resource_url" .= lr_resource_url,
-        "artist" .= lr_artist,
-        "id" .= lr_id ]
+        "artist"       .= lr_artist,
+        "id"           .= lr_id ]
 
 
 data LabelReleases = LabelReleases
@@ -58,8 +56,8 @@ data LabelReleases = LabelReleases
 
 instance Paginated LabelReleases where
     type Content LabelReleases = [LabelRelease]
-    pagination = lr_pagination
-    contents = lr_releases
+    pagination                 = lr_pagination
+    contents                   = lr_releases
 
 instance FromJSON LabelReleases where
     parseJSON = withObject "LabelReleases" $ \o -> do
@@ -70,4 +68,4 @@ instance FromJSON LabelReleases where
 instance ToJSON LabelReleases where
     toJSON LabelReleases{..} = object [
         "pagination" .= lr_pagination,
-        "releases" .= lr_releases ]
+        "releases"   .= lr_releases ]

@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Marketplace.Refund where
 
 import           Data.Text
@@ -24,13 +21,13 @@ instance ToJSON Refund where
 
 data OrderResource = OrderResource
     { or_resource_url :: Text
-    , or_id          :: Text
+    , or_id           :: Text
     } deriving (Read, Show, Eq)
 
 instance FromJSON OrderResource where
     parseJSON = withObject "order" $ \o -> do
         or_resource_url <- o .: "resource_url"
-        or_id          <- o .: "id"
+        or_id           <- o .: "id"
         return OrderResource{..}
 
 instance ToJSON OrderResource where

@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Release.Video where
 
 import Data.Text

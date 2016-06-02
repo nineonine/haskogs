@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.User.Release where
 
 import Discogs.Tools
@@ -17,8 +15,8 @@ data UserReleases  = UserReleases
 
 instance Paginated UserReleases where
     type Content UserReleases = [UserRelease]
-    pagination = ur_pagination
-    contents = ur_releases
+    pagination                = ur_pagination
+    contents                  = ur_releases
 
 instance FromJSON UserReleases where
     parseJSON = withObject "searchResult" $ \o -> do

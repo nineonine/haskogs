@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Label where
 
 import           Discogs.Tools
@@ -28,22 +25,22 @@ data Label = Label
 
 instance DiscogsResource Label where
     type ID Label = Int
-    resourceId = label_id
-    resourceUrl = label_resource_url
+    resourceId    = label_id
+    resourceUrl   = label_resource_url
 
 instance FromJSON Label where
     parseJSON = withObject "label" $ \o -> do
         label_profile      <- o .:? "profile"
         label_releases_url <- o .: "releases_url"
-        label_name   <- o .: "name"
+        label_name         <- o .: "name"
         label_contact_info <- o .:? "contact_info"
-        label_uri    <- o .: "uri"
+        label_uri          <- o .: "uri"
         label_parent_label <- o .:? "parent_label"
         label_sublabels    <- optional (o .: "sublabels")
         label_urls         <- o .:? "urls"
         label_images       <- o .:? "images"
         label_resource_url <- o .: "resource_url"
-        label_id     <- o .: "id"
+        label_id           <- o .: "id"
         label_data_quality <- o .: "data_quality"
         return Label{..}
 

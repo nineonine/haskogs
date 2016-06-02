@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards, DeriveGeneric #-}
-
 module Discogs.Types.User.Field where
 
 import Data.Text hiding (count)
@@ -12,22 +10,22 @@ instance ToJSON Fields
 instance FromJSON Fields
 
 data Field = Field
-    { field_lines   :: Maybe Int
+    { field_lines    :: Maybe Int
     , field_options  :: Maybe [Text]
     , field_position :: Int
     , field_name     :: Text
-    , field_type    :: Text
-    , field_id      :: Int
+    , field_type     :: Text
+    , field_id       :: Int
     } deriving (Show, Read, Eq)
 
 instance FromJSON Field where
     parseJSON = withObject "field" $ \o -> do
-        field_lines   <- o .:? "lines"
+        field_lines    <- o .:? "lines"
         field_options  <- o .:? "options"
         field_position <- o .: "position"
         field_name     <- o .: "name"
-        field_type    <- o .: "type"
-        field_id      <- o .: "id"
+        field_type     <- o .: "type"
+        field_id       <- o .: "id"
         return Field{..}
 
 instance ToJSON Field where

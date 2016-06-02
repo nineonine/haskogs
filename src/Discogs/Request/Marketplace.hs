@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Discogs.Request.Marketplace where
 
 import Discogs.Tools

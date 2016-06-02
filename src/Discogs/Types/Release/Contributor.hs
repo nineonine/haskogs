@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Release.Contributor where
 
 import Data.Text
@@ -12,11 +10,11 @@ data Contributor = Contributor
 
 instance FromJSON Contributor where
     parseJSON = withObject "contributor" $ \o -> do
-        contributor_username <- o .: "username"
+        contributor_username     <- o .: "username"
         contributor_resource_url <- o .: "resource_url"
         return Contributor{..}
 
 instance ToJSON Contributor where
     toJSON Contributor{..} = object [
-        "username" .= contributor_username,
+        "username"     .= contributor_username,
         "resource_url" .= contributor_resource_url ]

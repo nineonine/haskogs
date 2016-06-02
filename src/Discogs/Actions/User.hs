@@ -1,5 +1,4 @@
 -- | Contains Database related actions
-{-# LANGUAGE OverloadedStrings #-}
 
 module Discogs.Actions.User where
 

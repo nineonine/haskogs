@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Artist.Release where
 
 import Discogs.Types.Pagination
@@ -22,33 +20,33 @@ data ArtistRelease = ArtistRelease
 
 instance DiscogsResource ArtistRelease where
     type ID ArtistRelease = Int
-    resourceId = ar_id
-    resourceUrl = ar_resource_url
+    resourceId            = ar_id
+    resourceUrl           = ar_resource_url
 
 instance FromJSON ArtistRelease where
     parseJSON = withObject "artist" $ \o -> do
-        ar_thumb <- o .: "thumb"
-        ar_artist <- o .: "artist"
+        ar_thumb        <- o .: "thumb"
+        ar_artist       <- o .: "artist"
         ar_main_release <- o .:? "main_release"
-        ar_title <- o .: "title"
-        ar_role <- o .: "role"
-        ar_year <- o .:? "year"
+        ar_title        <- o .: "title"
+        ar_role         <- o .: "role"
+        ar_year         <- o .:? "year"
         ar_resource_url <- o .: "resource_url"
         ar_release_type <- o .:? "release_type"
-        ar_id <- o .: "id"
+        ar_id           <- o .: "id"
         return ArtistRelease{..}
 
 instance ToJSON ArtistRelease where
     toJSON ArtistRelease{..} = object [
-        "thumb" .= ar_thumb ,
-        "artist" .= ar_artist ,
+        "thumb"        .= ar_thumb ,
+        "artist"       .= ar_artist ,
         "main_release" .= ar_main_release ,
-        "title" .= ar_title ,
-        "role" .= ar_role ,
-        "year" .= ar_year ,
+        "title"        .= ar_title ,
+        "role"         .= ar_role ,
+        "year"         .= ar_year ,
         "resource_url" .= ar_resource_url ,
         "release_type" .= ar_release_type ,
-        "id" .= ar_id ]
+        "id"           .= ar_id ]
 
 data ArtistReleases = ArtistReleases
     { ar_pagination :: Maybe Pagination
@@ -57,8 +55,8 @@ data ArtistReleases = ArtistReleases
 
 instance Paginated ArtistReleases where
     type Content ArtistReleases = [ArtistRelease]
-    pagination = ar_pagination
-    contents = ar_releases
+    pagination                  = ar_pagination
+    contents                    = ar_releases
 
 instance FromJSON ArtistReleases where
     parseJSON = withObject "searchResult" $ \o -> do

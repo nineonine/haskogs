@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.User.Identity where
 
 import Data.Text
@@ -15,8 +13,8 @@ data Identity = Identity
 
 instance DiscogsResource Identity where
     type ID Identity = Int
-    resourceId = id_id
-    resourceUrl = id_resource_url
+    resourceId       = id_id
+    resourceUrl      = id_resource_url
 
 instance FromJSON Identity where
     parseJSON = withObject "identity" $ \o -> do

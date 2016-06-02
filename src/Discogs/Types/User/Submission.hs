@@ -1,6 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.User.Submission where
 
 import Discogs.Tools
@@ -28,16 +25,16 @@ data Submissions = Submissions
 
 instance Paginated Submissions where
     type Content Submissions = Submission
-    pagination = subs_pagination
-    contents = subs_submissions
+    pagination               = subs_pagination
+    contents                 = subs_submissions
 
 instance FromJSON Submissions where
     parseJSON = withObject "submissions" $ \o -> do
-        subs_pagination <- o .:? "pagination"
+        subs_pagination  <- o .:? "pagination"
         subs_submissions <- o .: "submissions"
         return Submissions{..}
 
 instance ToJSON Submissions where
     toJSON Submissions{..} = object [
-        "pagination" .= subs_pagination ,
+        "pagination"  .= subs_pagination ,
         "submissions" .= subs_submissions ]

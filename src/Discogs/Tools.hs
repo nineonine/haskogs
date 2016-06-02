@@ -1,8 +1,3 @@
-{-# LANGUAGE OverloadedStrings, LambdaCase #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE ExistentialQuantification #-}
-{-# LANGUAGE TypeFamilies #-}
-
 module Discogs.Tools where
 
 import Discogs.Types.Pagination

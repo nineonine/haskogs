@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Discogs.Request.User where
 
 import Discogs.Tools

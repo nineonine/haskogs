@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.User.BasicInfo where
 
 import Discogs.Types.Release.Label
@@ -23,8 +21,8 @@ data BasicInfo = BasicInfo
 
 instance DiscogsResource BasicInfo where
     type ID BasicInfo = Int
-    resourceId = bi_id
-    resourceUrl = bi_resource_url
+    resourceId        = bi_id
+    resourceUrl       = bi_resource_url
 
 instance FromJSON BasicInfo where
     parseJSON = withObject "basic_information" $ \o -> do
@@ -35,7 +33,7 @@ instance FromJSON BasicInfo where
         bi_artists      <- o .: "artists"
         bi_resource_url <- o .: "resource_url"
         bi_year         <- o .: "year"
-        bi_id          <- o .: "id"
+        bi_id           <- o .: "id"
         return BasicInfo{..}
 
 instance ToJSON BasicInfo where

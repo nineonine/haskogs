@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Release.Format where
 
 import Data.Text
@@ -13,13 +11,13 @@ data Format = Format
 
 instance FromJSON Format where
     parseJSON = withObject "format" $ \o -> do
-        format_qty <- o .: "qty"
+        format_qty          <- o .: "qty"
         format_descriptions <- o .:? "descriptions"
-        format_name <- o .: "name"
+        format_name         <- o .: "name"
         return Format{..}
 
 instance ToJSON Format where
     toJSON Format{..} = object [
-        "qty" .= format_qty ,
+        "qty"          .= format_qty ,
         "descriptions" .= format_descriptions ,
-        "name" .= format_name ]
+        "name"         .= format_name ]

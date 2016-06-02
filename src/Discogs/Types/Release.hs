@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Release where
 
 import           Discogs.Tools
@@ -54,8 +51,8 @@ data Release = Release
 
 instance DiscogsResource Release where
     type ID Release = Int
-    resourceId = release_id
-    resourceUrl = release_resource_url
+    resourceId      = release_id
+    resourceUrl     = release_resource_url
 
 instance FromJSON Release where
     parseJSON = withObject "release" $ \o -> do
@@ -65,14 +62,14 @@ instance FromJSON Release where
         release_released_formatted <- o .: "released_formatted"
         release_labels             <- o .: "labels"
         release_community          <- o .: "community"
-        release_year       <- o .: "year"
-        release_images     <- o .: "images"
+        release_year               <- o .: "year"
+        release_images             <- o .: "images"
         release_format_quantity    <- o .: "format_quantity"
-        release_id         <- o .: "id"
+        release_id                 <- o .: "id"
         release_genres             <- o .: "genres"
-        release_thumb      <- o .: "thumb"
+        release_thumb              <- o .: "thumb"
         release_extraartists       <- optional ( o .: "extraartists" )
-        release_title      <- o .: "title"
+        release_title              <- o .: "title"
         release_artists            <- o .: "artists"
         release_date_changed       <- o .: "date_changed"
         release_master_id          <- optional (o .: "master_id")
@@ -88,40 +85,40 @@ instance FromJSON Release where
         release_companies          <- o .: "companies"
         release_uri                <- o .: "uri"
         release_formats            <- o .: "formats"
-        release_resource_url   <- o .: "resource_url"
-        release_data_quality   <- o .: "data_quality"
+        release_resource_url       <- o .: "resource_url"
+        release_data_quality       <- o .: "data_quality"
         return Release{..}
 
 instance ToJSON Release where
     toJSON Release{..} = object [
-        "styles" .= release_styles,
-        "videos" .= release_videos,
-        "series" .= release_series,
+        "styles"             .= release_styles,
+        "videos"             .= release_videos,
+        "series"             .= release_series,
         "released_formatted" .= release_released_formatted,
-        "labels" .= release_labels,
-        "community" .= release_community,
-        "year" .= release_year,
-        "images" .= release_images,
-        "format_quantity" .= release_format_quantity,
-        "id" .= release_id,
-        "genres" .= release_genres,
-        "thumb" .= release_thumb,
-        "extraartists" .= release_extraartists,
-        "title" .= release_title,
-        "artists" .= release_artists,
-        "date_changed" .= release_date_changed,
-        "master_id" .= release_master_id,
-        "tracklist" .= release_tracklist,
-        "status" .= release_status,
-        "estimated_weight" .= release_estimated_weight,
-        "master_url" .= release_master_url,
-        "released" .= release_released,
-        "date_added" .= release_date_added,
-        "country" .= release_country,
-        "notes" .= release_notes,
-        "identifiers" .= release_identifiers,
-        "companies" .= release_companies,
-        "uri" .= release_uri,
-        "formats" .= release_formats,
-        "resource_url" .= release_resource_url,
-        "data_quality" .= release_data_quality ]
+        "labels"             .= release_labels,
+        "community"          .= release_community,
+        "year"               .= release_year,
+        "images"             .= release_images,
+        "format_quantity"    .= release_format_quantity,
+        "id"                 .= release_id,
+        "genres"             .= release_genres,
+        "thumb"              .= release_thumb,
+        "extraartists"       .= release_extraartists,
+        "title"              .= release_title,
+        "artists"            .= release_artists,
+        "date_changed"       .= release_date_changed,
+        "master_id"          .= release_master_id,
+        "tracklist"          .= release_tracklist,
+        "status"             .= release_status,
+        "estimated_weight"   .= release_estimated_weight,
+        "master_url"         .= release_master_url,
+        "released"           .= release_released,
+        "date_added"         .= release_date_added,
+        "country"            .= release_country,
+        "notes"              .= release_notes,
+        "identifiers"        .= release_identifiers,
+        "companies"          .= release_companies,
+        "uri"                .= release_uri,
+        "formats"            .= release_formats,
+        "resource_url"       .= release_resource_url,
+        "data_quality"       .= release_data_quality ]

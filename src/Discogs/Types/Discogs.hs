@@ -1,7 +1,3 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings, GADTs #-}
-{-# LANGUAGE KindSignatures, LambdaCase , RankNTypes #-}
-
 module Discogs.Types.Discogs where
 
 import Discogs.Tools

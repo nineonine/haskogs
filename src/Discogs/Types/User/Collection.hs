@@ -1,5 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
-
 module Discogs.Types.User.Collection where
 
 import Discogs.Types.User.Folder

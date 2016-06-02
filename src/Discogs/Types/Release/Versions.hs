@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Release.Versions where
 
 import           Discogs.Tools
@@ -8,8 +5,6 @@ import           Discogs.Types.Pagination
 
 import           Data.Aeson
 import           Data.Text
-import           GHC.Generics
-
 
 data ReleaseVersion = ReleaseVersion
     { rv_status       :: Text
@@ -25,33 +20,33 @@ data ReleaseVersion = ReleaseVersion
 
 instance DiscogsResource ReleaseVersion where
     type ID ReleaseVersion = Int
-    resourceId = rv_id
-    resourceUrl = rv_resource_url
+    resourceId             = rv_id
+    resourceUrl            = rv_resource_url
 
 instance FromJSON ReleaseVersion where
     parseJSON = withObject "release" $ \o -> do
-        rv_status <- o .: "status"
-        rv_thumb <- o .: "thumb"
-        rv_format <- o .: "format"
-        rv_title <- o .: "title"
-        rv_label <- o .: "label"
-        rv_released <- o .: "released"
-        rv_catno <- o .: "catno"
+        rv_status       <- o .: "status"
+        rv_thumb        <- o .: "thumb"
+        rv_format       <- o .: "format"
+        rv_title        <- o .: "title"
+        rv_label        <- o .: "label"
+        rv_released     <- o .: "released"
+        rv_catno        <- o .: "catno"
         rv_resource_url <- o .: "resource_url"
-        rv_id <- o .: "id"
+        rv_id           <- o .: "id"
         return ReleaseVersion{..}
 
 instance ToJSON ReleaseVersion where
     toJSON ReleaseVersion{..} = object [
-        "status" .= rv_status,
-        "thumb" .= rv_thumb,
-        "format" .= rv_format,
-        "title" .= rv_title,
-        "label" .= rv_label,
-        "released" .= rv_released,
-        "catno" .= rv_catno,
+        "status"       .= rv_status,
+        "thumb"        .= rv_thumb,
+        "format"       .= rv_format,
+        "title"        .= rv_title,
+        "label"        .= rv_label,
+        "released"     .= rv_released,
+        "catno"        .= rv_catno,
         "resource_url" .= rv_resource_url,
-        "id" .= rv_id ]
+        "id"           .= rv_id ]
 
 data Versions = Versions
     { versions_pagination :: Maybe Pagination
@@ -60,8 +55,8 @@ data Versions = Versions
 
 instance Paginated Versions where
     type Content Versions = [ReleaseVersion]
-    pagination = versions_pagination
-    contents = versions_versions
+    pagination            = versions_pagination
+    contents              = versions_versions
 
 instance FromJSON Versions where
     parseJSON = withObject "searchResult" $ \o -> do

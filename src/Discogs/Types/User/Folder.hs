@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.User.Folder where
 
 import Data.Text hiding (count)
@@ -15,8 +13,8 @@ data Folder = Folder
 
 instance DiscogsResource Folder where
     type ID Folder = Int
-    resourceId = folder_id
-    resourceUrl = folder_resource_url
+    resourceId     = folder_id
+    resourceUrl    = folder_resource_url
 
 instance FromJSON Folder where
     parseJSON = withObject "folder" $ \o -> do

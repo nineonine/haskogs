@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Search.Result where
 
 import           Control.Applicative
@@ -28,8 +25,8 @@ data Result = Result
 
 instance DiscogsResource Result where
     type ID Result = Int
-    resourceId = result_id
-    resourceUrl = result_resource_url
+    resourceId     = result_id
+    resourceUrl    = result_resource_url
 
 instance FromJSON Result where
     parseJSON = withObject "result" $ \o -> do

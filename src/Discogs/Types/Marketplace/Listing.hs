@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Marketplace.Listing where
 
 import Discogs.Tools
@@ -19,8 +17,8 @@ data Inventory = Inventory
 
 instance Paginated Inventory where
     type Content Inventory = [Listing]
-    pagination = inv_pagination
-    contents = inv_listings
+    pagination             = inv_pagination
+    contents               = inv_listings
 
 instance FromJSON Inventory where
     parseJSON = withObject "searchResult" $ \o -> do

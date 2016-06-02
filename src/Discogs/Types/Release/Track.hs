@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
-
 module Discogs.Types.Release.Track where
 
 import Data.Text
@@ -24,5 +22,5 @@ instance ToJSON Track where
     toJSON Track{..} = object [
         "duration" .= track_duration,
         "position" .= track_position,
-        "type_" .= track_type,
-        "title" .= track_title ]
+        "type_"    .= track_type,
+        "title"    .= track_title ]

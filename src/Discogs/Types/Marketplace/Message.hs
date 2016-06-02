@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.Marketplace.Message where
 
 import           Discogs.Tools
@@ -19,8 +16,8 @@ data Messages = Messages
 
 instance Paginated Messages where
     type Content Messages = [Message]
-    pagination = msgs_pagination
-    contents = msgs_messages
+    pagination            = msgs_pagination
+    contents              = msgs_messages
 
 instance FromJSON Messages where
     parseJSON = withObject "searchResult" $ \o -> do
@@ -31,7 +28,7 @@ instance FromJSON Messages where
 instance ToJSON Messages where
     toJSON Messages{..} = object [
         "pagination" .= msgs_pagination ,
-        "messages"    .= msgs_messages ]
+        "messages"   .= msgs_messages ]
 
 data Message = Message
     { message_refund    :: Maybe Refund

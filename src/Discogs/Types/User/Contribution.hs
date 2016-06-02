@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module Discogs.Types.User.Contribution where
 
 import Discogs.Tools
@@ -16,16 +13,16 @@ data Contributions = Contributions {
 
 instance Paginated Contributions where
     type Content Contributions = [Release]
-    pagination = contribution_pagination
-    contents = contribution_contributions
+    pagination                 = contribution_pagination
+    contents                   = contribution_contributions
 
 instance FromJSON Contributions where
     parseJSON = withObject "searchResult" $ \o -> do
-        contribution_pagination      <- o.:? "pagination"
-        contribution_contributions   <- o .: "contributions"
+        contribution_pagination    <- o.:? "pagination"
+        contribution_contributions <- o .: "contributions"
         return Contributions{..}
 
 instance ToJSON Contributions where
     toJSON Contributions{..} = object [
-        "pagination" .= contribution_pagination ,
-        "contributions"   .= contribution_contributions ]
+        "pagination"    .= contribution_pagination ,
+        "contributions" .= contribution_contributions ]

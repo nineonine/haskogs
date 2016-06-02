@@ -1,5 +1,3 @@
-{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
-
 module Discogs.Types.Release.Identifier where
 
 import Data.Text
@@ -13,7 +11,7 @@ data Identifier = Identifier
 
 instance FromJSON Identifier where
     parseJSON = withObject "identifier" $ \o -> do
-        itype       <- o .: "type"
+        itype        <- o .: "type"
         idescription <- o .:? "description"
         ivalue       <- o .: "value"
         return Identifier{..}
