@@ -92,18 +92,18 @@ library
     LambdaCase
     TypeFamilies
     RecordWildCards
-  build-depends:       base >=4.6
-                       , bytestring >=0.10 && <0.11
-                       , http-client >=0.4 && <0.5
-                       , http-client-tls >=0.2 && <0.3
-                       , text >=1.2 && <1.3
-                       , aeson >=0.11 && <0.12
-                       , hspec >=2.2.2
-                       , time >=1.5
-                       , http-types >=0.9
-                       , data-default-class >= 0.0.1
-                       , transformers >= 0.4
-                       , free >= 4
+  build-depends:       base >=4.15
+                       , bytestring >=0.10 && < 0.11
+                       , http-client >=0.7.11
+                       , http-client-tls >=0.3.6
+                       , text >=1.2.5 && <1.3
+                       , aeson >=2.0.3
+                       , hspec >=2.8.5
+                       , time >=1.9.3
+                       , http-types >=0.12.3
+                       , data-default-class >= 0.1.2
+                       , transformers >= 0.5.6
+                       , free >= 5.1.8
   default-language:    Haskell2010
 
 test-suite test

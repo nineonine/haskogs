@@ -5,13 +5,13 @@ import Discogs.Types.Pagination
 import Data.Char
 import GHC.Generics
 import Data.Aeson
+import Data.Aeson.Key
 import Data.Aeson.Types
 import Prelude hiding (concat)
 import qualified Data.Text as T
 import Data.Text.Read
 import Data.Text.Encoding
 import Network.HTTP.Client
-import Data.Default.Class
 import Data.ByteString hiding (dropWhile, map)
 import qualified Data.ByteString.Char8 as C
 
@@ -42,7 +42,7 @@ toOptionalParams = map toPS
                                  Left _       -> OP a b
 
 toKeyValues :: [OptionalParams] -> [Pair]
-toKeyValues = map ( \(OP a b) -> a .= b )
+toKeyValues = map ( \(OP a b) -> (fromText a) .= b )
 
 preparePairs :: Params -> [Pair]
 preparePairs = toKeyValues . toOptionalParams
@@ -72,8 +72,8 @@ intToBs = C.pack . show
 
 -- for request template with port 443 --
 secureReq :: Request
-secureReq = def { secure = True
-                , port = 443 }
+secureReq = defaultRequest { secure = True
+                           , port = 443 }
 --------------------------------------
 
 -- Useful function for unwraping standard DiscogsT result value --
