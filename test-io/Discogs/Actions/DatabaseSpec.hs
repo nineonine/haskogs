@@ -76,7 +76,7 @@ spec = describe "Discogs.Actions.Database" $ do
         case resp of
             Left _ -> expectationFailure "Request failed. Something went wrong."
             Right (Just lr) ->
-                length (lr_releases lr) `shouldBe` 35
+                length (lr_releases lr) `shouldBe` 50
 
     it "should be able to perform search" $ do
         resp <- runDiscogs testingToken $ search [("artist", "robert hood")]

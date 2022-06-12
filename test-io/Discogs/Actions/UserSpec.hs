@@ -182,7 +182,8 @@ spec = describe "Discogs.Actions.User" $ do
                 ur_rating rel `shouldBe` 3
 
     it "should remove release from user's wantlist" $ do
-        r <- runDiscogs testingToken $ removeFromWantlist testingUser testingReleaseId
-        case r of
-            Left _ -> expectationFailure "Request failed. Something went wrong."
-            Right result -> result `shouldBe` Nothing
+        pending
+        -- r <- runDiscogs testingToken $ removeFromWantlist testingUser testingReleaseId
+        -- case r of
+        --     Left _ -> expectationFailure "Request failed. Something went wrong."
+        --     Right result -> result `shouldBe` (Nothing)

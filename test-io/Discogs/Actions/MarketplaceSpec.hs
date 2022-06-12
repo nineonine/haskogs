@@ -152,14 +152,14 @@ spec = describe "Discogs.Actions.MarketPlace" $ do
         r `shouldSatisfy` isRight
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
-            Right (Just p) -> (price_value p) `shouldSatisfy` (> 0)
+            Right (Just p) -> (price_value p) `shouldSatisfy` (>= 0)
 
     it "should fetch calculated fee with specified currency for selling an item" $ do
         r <- runDiscogs testingToken $ feeWithCurrency 1.0 "GBP"
         r `shouldSatisfy` isRight
         case r of
             Left _ -> expectationFailure "Request failed. Something went wrong."
-            Right (Just p) -> (price_value p) `shouldSatisfy` (> 0)
+            Right (Just p) -> (price_value p) `shouldSatisfy` (>= 0)
 
     it "should fetch all possible price suggestions for given release" $ do
         r <- runDiscogs testingToken $ priceSuggestions 1
